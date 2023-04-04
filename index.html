@@ -53,13 +53,13 @@
 
 Side: <select id="side_selector" onchange="localStorage . setItem ('side', side = this . value);" autocomplete="off"></select>
 
-&nbsp;&nbsp;&nbsp;&nbsp;Music On:<input type="checkbox" id="music_on" autocomplete="off" onchange="localStorage . setItem ('music_on', music_on = this . checked); if (music_on) PlayAudio ('Beowulf'); else PauseAudio ('Beowulf');"/>
+&nbsp;&nbsp;&nbsp;&nbsp;Music On: <input type="checkbox" id="music_on" autocomplete="off" onchange="localStorage . setItem ('music_on', music_on = this . checked); if (music_on) PlayAudio ('Beowulf'); else PauseAudio ('Beowulf');"/>
 
-&nbsp;&nbsp;Effects On:<input type="checkbox" id="effects_on" autocomplete="off" onchange="localStorage . setItem ('effects_on', effects_on = this . checked);"/>
+&nbsp;&nbsp;&nbsp;&nbsp;Effects On: <input type="checkbox" id="effects_on" autocomplete="off" onchange="localStorage . setItem ('effects_on', effects_on = this . checked);"/>
 
 <button onclick="if (confirm ('Are you sure?')) {localStorage . clear (); location . reload ();}" style="position: absolute; right: 10px;">Reset System ?</button>
 
-&nbsp;&nbsp;<button onclick="if (name = prompt ('Commanding Officer\'s Name')) CreateCommandingOfficer (name);">Create Commanding Officer</button>
+&nbsp;&nbsp;&nbsp;&nbsp;<button onclick="if (name = prompt ('Commanding Officer\'s Name')) CreateCommandingOfficer (name);">Create Commanding Officer</button>
 
 
 
