@@ -51,13 +51,15 @@
 <script src="audio_ctrl.js"></script>
 <script src="settings.js"></script>
 
-Side:<select id="side_selector" onchange="localStorage . setItem ('side', side = this . value);" autocomplete="off"></select>
+Side: <select id="side_selector" onchange="localStorage . setItem ('side', side = this . value);" autocomplete="off"></select>
 
-&nbsp;&nbsp;Music On:<input type="checkbox" id="music_on" autocomplete="off" onchange="localStorage . setItem ('music_on', music_on = this . checked); if (music_on) PlayAudio ('Beowulf'); else PauseAudio ('Beowulf');"/>
+&nbsp;&nbsp;&nbsp;&nbsp;Music On:<input type="checkbox" id="music_on" autocomplete="off" onchange="localStorage . setItem ('music_on', music_on = this . checked); if (music_on) PlayAudio ('Beowulf'); else PauseAudio ('Beowulf');"/>
 
 &nbsp;&nbsp;Effects On:<input type="checkbox" id="effects_on" autocomplete="off" onchange="localStorage . setItem ('effects_on', effects_on = this . checked);"/>
 
 <button onclick="if (confirm ('Are you sure?')) {localStorage . clear (); location . reload ();}" style="position: absolute; right: 10px;">Reset System ?</button>
+
+&nbsp;&nbsp;<button onclick="if (name = prompt ('Commanding Officer\'s Name')) CreateCommandingOfficer (name);">Create Commanding Officer</button>
 
 
 
@@ -67,6 +69,13 @@ for (var country of sides) document . getElementById ('side_selector') . options
 document . getElementById ('music_on') . checked = music_on;
 if (music_on) PlayAudio ('Beowulf'); else PauseAudio ('Beowulf');
 document . getElementById ('effects_on') . checked = effects_on;
+
+var CreateCommandingOfficer = function (name) {
+	commanders [side] . commanders [name] = {rank: ranks [side] [0], rank_id: 0, score: 0, victory: 0, abort: 0, defeat: 0, scenarios: [], orders: [], status: 'Active'};
+	commanders [side] . commander = name;
+	localStorage . setItem (side, JSON . stringify (commanders [side]));
+};
+
 </script>
 
 <h2><a href="doc/list_of_russian_submarines.html">List of Soviet and Russian Submarines</a></h2>

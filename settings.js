@@ -14,3 +14,9 @@ if (music_on === null) localStorage . setItem ('music_on', music_on = true); els
 
 var effects_on = localStorage . getItem ('effects_on');
 if (effects_on === null) localStorage . setItem ('effects_on', effects_on = true); else effects_on = effects_on === 'true';
+
+var commanders = {};
+for (var country of sides) {
+	commanders [country] = JSON . parse (localStorage . getItem (country) || '{"commanders": {}, "commander": null}');
+	if (! localStorage . getItem (country)) localStorage . setItem (country, JSON . stringify (commanders [country]));
+}
