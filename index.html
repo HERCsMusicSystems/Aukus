@@ -51,7 +51,7 @@
 <script src="audio_ctrl.js"></script>
 <script src="settings.js"></script>
 
-Side: <select id="side_selector" onchange="localStorage . setItem ('side', side = this . value);" autocomplete="off"></select>
+Side: <select id="side_selector" onchange="localStorage . setItem ('side', side = this . value); ReadCommanders ();" autocomplete="off"></select>
 
 &nbsp;&nbsp;&nbsp;&nbsp;Music On: <input type="checkbox" id="music_on" autocomplete="off" onchange="localStorage . setItem ('music_on', music_on = this . checked); if (music_on) PlayAudio ('Beowulf'); else PauseAudio ('Beowulf');"/>
 
@@ -60,6 +60,9 @@ Side: <select id="side_selector" onchange="localStorage . setItem ('side', side 
 <button onclick="if (confirm ('Are you sure?')) {localStorage . clear (); location . reload ();}" style="position: absolute; right: 10px;">Reset System ?</button>
 
 &nbsp;&nbsp;&nbsp;&nbsp;<button onclick="if (name = prompt ('Commanding Officer\'s Name')) CreateCommandingOfficer (name);">Create Commanding Officer</button>
+
+<table id="Commanders" style="background-color: #00ff8866;">
+</table>
 
 
 
@@ -74,7 +77,27 @@ var CreateCommandingOfficer = function (name) {
 	commanders [side] . commanders [name] = {rank: ranks [side] [0], rank_id: 0, score: 0, victory: 0, abort: 0, defeat: 0, scenarios: [], orders: [], status: 'Active'};
 	commanders [side] . commander = name;
 	localStorage . setItem (side, JSON . stringify (commanders [side]));
+	ReadCommanders ();
 };
+
+var ReadCommanders = function () {
+	var content = '<tr><td></td><td align="center">Rank</td><td>Name</td><td>Ribbons</td><td>Score</td><td>Victories</td><td>Aborts</td><td>Defeats</td><td>Status</td></tr>';
+	for (var captain in commanders [side] . commanders) {
+		var cp = commanders [side] . commanders [captain];
+		cp . orders . sort ();
+		var orders = '';
+		var ol = cp . orders . length;
+		for (var ord = 0; ord < ol; ord += 1) {
+			orders += `<img src="orders/${side}/${cp . orders [ord]}-ribbon.png" width="80" title="${cp . orders [ord]}"/>`;
+			if ((ol - ord) % 3 === 1) orders += '<br/>';
+			if (ord === 0 && ol % 3 === 0) orders += '<br/>';
+		}
+		content += `<tr><td><input type="radio" name="commanders" ${commanders [side] . commander === captain ? 'checked' : ''}/></td><td>${cp . rank}</td><td>${captain}</td><td>${orders}</td><td align="center">${cp . score}</td><td align="center">${cp . victory}</td><td align="center">${cp . abort}</td><td align="center">${cp . defeat}</td><td align="center">${cp . status}</td><td><button>Delete</button></td></tr>`;
+	}
+	document . getElementById ('Commanders') . innerHTML = content;
+};
+
+ReadCommanders ();
 
 </script>
 
