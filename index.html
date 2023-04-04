@@ -55,16 +55,18 @@ Side:<select id="side_selector" onchange="localStorage . setItem ('side', side =
 
 &nbsp;&nbsp;Music On:<input type="checkbox" id="music_on" autocomplete="off" onchange="localStorage . setItem ('music_on', music_on = this . checked); if (music_on) PlayAudio ('Beowulf'); else PauseAudio ('Beowulf');"/>
 
+&nbsp;&nbsp;Effects On:<input type="checkbox" id="effects_on" autocomplete="off" onchange="localStorage . setItem ('effects_on', effects_on = this . checked);"/>
+
 <button onclick="if (confirm ('Are you sure?')) {localStorage . clear (); location . reload ();}" style="position: absolute; right: 10px;">Reset System ?</button>
 
 
 
 
 <script>
-document . getElementById ('side_selector') . options . length = 0;
 for (var country of sides) document . getElementById ('side_selector') . options . add (new Option (country, country, false, country === side));
 document . getElementById ('music_on') . checked = music_on;
 if (music_on) PlayAudio ('Beowulf'); else PauseAudio ('Beowulf');
+document . getElementById ('effects_on') . checked = effects_on;
 </script>
 
 <h2><a href="doc/list_of_russian_submarines.html">List of Soviet and Russian Submarines</a></h2>
