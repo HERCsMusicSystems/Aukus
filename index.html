@@ -98,7 +98,6 @@ var ReadCommanders = function () {
 	var content = '<tr><td></td><td align="center">Rank</td><td>Name</td><td>Ribbons</td><td>Score</td><td>Victories</td><td>Aborts</td><td>Defeats</td><td>Status</td></tr>';
 	for (var captain in commanders [side] . commanders) {
 		var cp = commanders [side] . commanders [captain];
-		cp . orders . sort ();
 		var orders = '';
 		var ol = cp . orders . length;
 		for (var ord = 0; ord < ol; ord += 1) {

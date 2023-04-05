@@ -4,7 +4,8 @@ var ranks = {
 	USA: ['Ensign', 'Lieutenant', 'Lieutenant Commander', 'Commander', 'Captain'],
 	Russia: ['Лейтенант', 'Старший лейтенант', 'Капитан-лейтенант', 'Капитан третьего ранга', 'Капитан второго ранга', 'Капитан'],
 	Polad: ['Podporucznik', 'Porucznik', 'Kapitan', 'Komandor-Podporucznik', 'Komandor'],
-	Germany: ['Leutnant', 'Oberleutnant', 'Kapitän­Leutnant', 'Kapitän']
+	Germany: ['Leutnant', 'Oberleutnant', 'Kapitän­Leutnant', 'Kapitän'],
+	France: ['Enseigne', 'Lieutenant', 'Capitaine']
 };
 
 var sides = Object . keys (ranks);
