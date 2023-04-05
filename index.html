@@ -80,6 +80,20 @@ var CreateCommandingOfficer = function (name) {
 	ReadCommanders ();
 };
 
+var DeleteCommandingOfficer = function (name) {
+	if (! confirm (`Delete ${commanders [side] . commanders [name] . rank} ${name} Commanding Officer?`)) return;
+	delete commanders [side] . commanders [name];
+	var cmds = Object . keys (commanders [side] . commanders);
+	if (commanders [side] . commander === name) commanders [side] . commander = cmds . length > 0 ? cmds [0] : null;
+	localStorage . setItem (side, JSON . stringify (commanders [side]));
+	ReadCommanders ();
+};
+
+var SelectCommandingOfficer = function (name) {
+	commanders [side] . commander = name;
+	localStorage . setItem (side, JSON . stringify (commanders [side]));
+};
+
 var ReadCommanders = function () {
 	var content = '<tr><td></td><td align="center">Rank</td><td>Name</td><td>Ribbons</td><td>Score</td><td>Victories</td><td>Aborts</td><td>Defeats</td><td>Status</td></tr>';
 	for (var captain in commanders [side] . commanders) {
@@ -92,7 +106,7 @@ var ReadCommanders = function () {
 			if ((ol - ord) % 3 === 1) orders += '<br/>';
 			if (ord === 0 && ol % 3 === 0) orders += '<br/>';
 		}
-		content += `<tr><td><input type="radio" name="commanders" ${commanders [side] . commander === captain ? 'checked' : ''}/></td><td>${cp . rank}</td><td>${captain}</td><td>${orders}</td><td align="center">${cp . score}</td><td align="center">${cp . victory}</td><td align="center">${cp . abort}</td><td align="center">${cp . defeat}</td><td align="center">${cp . status}</td><td><button>Delete</button></td></tr>`;
+		content += `<tr><td><input type="radio" name="commanders" ${commanders [side] . commander === captain ? 'checked' : ''} onclick="SelectCommandingOfficer ('${captain}');"/></td><td>${cp . rank}</td><td>${captain}</td><td>${orders}</td><td align="center">${cp . score}</td><td align="center">${cp . victory}</td><td align="center">${cp . abort}</td><td align="center">${cp . defeat}</td><td align="center">${cp . status}</td><td><button onclick="DeleteCommandingOfficer ('${captain}');">Delete</button></td></tr>`;
 	}
 	document . getElementById ('Commanders') . innerHTML = content;
 };
