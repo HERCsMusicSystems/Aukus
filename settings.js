@@ -1,7 +1,10 @@
 var ranks = {
-	'USA': ['Ensign', 'Lieutenant', 'Lieutenant Commander', 'Commander', 'Captain'],
-	'United Kingdom': ['Sub-lieutenant', 'Lieutenant', 'Lieutenant Commander', 'Commander', 'Captain', 'Commodore'],
-	Russia: ['Лейтенант', 'Старший лейтенант', 'Капитан-лейтенант', 'Капитан третьего ранга', 'Капитан второго ранга', 'Капитан']
+	Australia: ['Sub-Lieutenant', 'Lieutenant', 'Lieutenant Commander', 'Commander', 'Captain (RAN)', 'Commodore'],
+	'United Kingdom': ['Sub-Lieutenant', 'Lieutenant', 'Lieutenant Commander', 'Commander', 'Captain', 'Commodore'],
+	USA: ['Ensign', 'Lieutenant', 'Lieutenant Commander', 'Commander', 'Captain'],
+	Russia: ['Лейтенант', 'Старший лейтенант', 'Капитан-лейтенант', 'Капитан третьего ранга', 'Капитан второго ранга', 'Капитан'],
+	Polad: ['Podporucznik', 'Porucznik', 'Kapitan', 'Komandor-Podporucznik', 'Komandor'],
+	Germany: ['Leutnant', 'Oberleutnant', 'Kapitän­Leutnant', 'Kapitän']
 };
 
 var sides = Object . keys (ranks);
