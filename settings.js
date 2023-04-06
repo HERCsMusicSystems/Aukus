@@ -24,3 +24,13 @@ for (var country of sides) {
 	commanders [country] = JSON . parse (localStorage . getItem (country) || '{"commanders": {}, "commander": null}');
 	if (! localStorage . getItem (country)) localStorage . setItem (country, JSON . stringify (commanders [country]));
 }
+
+var LoadJavaScript = function (source, instructions) {
+	var script = document . createElement ('script');
+	script . src = source;
+	script . onload = instructions;
+	document . body . appendChild (script);
+};
+
+var parameters = document . URL . indexOf ('?') + 1;
+parameters = parameters > 0 ? JSON . parse (decodeURI (document . URL . substr (parameters))) : null;
