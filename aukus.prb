@@ -1,0 +1,31 @@
+#!/home/rama/bin/studio
+
+; 1. Create new xinetd file in /etc/xinetd.d/
+; 2. Create program referenced by xinetd.
+; 3. Make sure the program has appropriate privileges to be run.
+; 4. Insert new entry in /etc/services
+; 5. Restart:
+;    a) /etc/init.d/xinetd restart
+;    b) something like sudo service aukus restart
+
+
+[add_search_directory "/home/rama/Desktop/dev/Aukus/"]
+
+[import "studio"]
+[import "http"]
+
+[[route *req *res GET ""] [*res "HTTP/1.0 200 OK\n\n"] [*res [] : "index.html"]]
+[[route *req *res GET *sliderule] [*res "HTTP/1.0 200 OK\n\n"] [*res [] : *sliderule]]; "</h1><body>"]]
+;[[route *req *res GET *folder *script] [*res "HTTP/1.0 200 OK\n\n"] [add *folder '.' *script *path] [*res *folder *script '<hr/>' *path]]
+[[route *req *res GET *folder *script] [*res "HTTP/1.0 200 OK\n\n"] [add *folder "/" *script *path] [*res [] : *path]]
+[[route *req *res GET *f1 *f2 *script] [*res "HTTP/1.0 200 OK\n\n"] [add *f1 "/" *f2 "/" *script *path] [*res [] : *path]]
+[[route *req *res GET *f1 *f2 *f3 *script] [*res "HTTP/1.0 200 OK\n\n"] [add *f1 "/" *f2 "/" *f3 "/" *script *path] [*res [] : *path]]
+[[route *req *res : *route] [*res "HTTP/1.0 200 OK\n\n<body><h1>Prolog Webserver" [*route] "</h1></body>"]]
+
+[res [http_request *req] [*req HTTP_URI : *route] [route *req http_responder : *route]]
+
+
+
+[exit]
+
+
