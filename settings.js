@@ -1,3 +1,11 @@
+
+var InheritFrom = function (from, to) {
+	if (to === undefined) {to = from; from = function () {to . apply (this, arguments);}}
+	from . prototype = Object . create (to . prototype);
+	from . prototype . constructor = from;
+	return from;
+};
+
 var ranks = {
 	Australia: ['Sub-Lieutenant', 'Lieutenant', 'Lieutenant Commander', 'Commander', 'Captain (RAN)', 'Commodore'],
 	'United Kingdom': ['Sub-Lieutenant', 'Lieutenant', 'Lieutenant Commander', 'Commander', 'Captain', 'Commodore'],
@@ -6,6 +14,19 @@ var ranks = {
 	Polad: ['Podporucznik', 'Porucznik', 'Kapitan', 'Komandor-Podporucznik', 'Komandor'],
 	Germany: ['Leutnant', 'Oberleutnant', 'Kapitän­Leutnant', 'Kapitän'],
 	France: ['Enseigne', 'Lieutenant', 'Capitaine']
+};
+
+var friends = {
+	Australia: ['United Kingdom', USA],
+	'United Kingdom': [Australia, USA],
+	USA: [Australia, 'United Kingdom']
+};
+
+var enemies = {
+	Australia: [Russia],
+	'United Kingdom': [Russia],
+	USA: [Russia],
+	Russia: [Australia, 'United Kingdom', USA]
 };
 
 var sides = Object . keys (ranks);
