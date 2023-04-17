@@ -17,16 +17,16 @@ var ranks = {
 };
 
 var friends = {
-	Australia: ['United Kingdom', USA],
-	'United Kingdom': [Australia, USA],
-	USA: [Australia, 'United Kingdom']
+	Australia: ['United Kingdom', 'USA'],
+	'United Kingdom': ['Australia', 'USA'],
+	USA: ['Australia', 'United Kingdom']
 };
 
 var enemies = {
-	Australia: [Russia],
-	'United Kingdom': [Russia],
-	USA: [Russia],
-	Russia: [Australia, 'United Kingdom', USA]
+	Australia: ['Russia'],
+	'United Kingdom': ['Russia'],
+	USA: ['Russia'],
+	Russia: ['Australia', 'United Kingdom', 'USA']
 };
 
 var sides = Object . keys (ranks);
