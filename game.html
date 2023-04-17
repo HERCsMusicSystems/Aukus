@@ -1,0 +1,107 @@
+<!DOCTYPE html><meta charset="UTF-8"/>
+
+<!--
+///////////////////////////////////////////////////////////////////////////////////
+//                     Copyright (C) 2023 Dr Robert P. Wolf                      //
+//                                                                               //
+// Permission is hereby granted, free of charge, to any person obtaining a copy  //
+// of this software and associated documentation files (the "Software"), to deal //
+// in the Software without restriction, including without limitation the rights  //
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell     //
+// copies of the Software, and to permit persons to whom the Software is         //
+// furnished to do so, subject to the following conditions:                      //
+//                                                                               //
+// The above copyright notice and this permission notice shall be included in    //
+// all copies or substantial portions of the Software.                           //
+//                                                                               //
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR    //
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,      //
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE   //
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER        //
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, //
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN     //
+// THE SOFTWARE.                                                                 //
+///////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////
+// Program started on 13th April 2023 //
+////////////////////////////////////////
+-->
+
+<html>
+
+<head>
+	<title>Aukus Game Play....</title>
+	<link rel="shortcut icon" type="image/x-icon" href="h.ico"/>
+	<style>
+	a:link {color: blue; text-shadow: 1px 1px red;}
+	a:visited {color: blue;}
+	a:hover {color: red; text-shadow: 1px 1px blue;}
+	a:active {color: red;}
+	</style>
+</head>
+
+<body bgcolor="#0000aa" style="font-family: arial; color: gold; text-shadow: 1px 1px red; background-size: cover;">
+<script src="settings.js"></script>
+
+<div id="ctrl" style="position: absolute; top: 8px; right: 8px; font-family: arial;">
+	<table style="background: #ff00ffb0; color: yellow;">
+		<tr>
+			<td>SPEED:</td>
+			<td>
+				<button onclick="simulated . setSpeed ('stop');">STOP</button>
+				<button onclick="simulated . setSpeed ('slow');">SLOW</button>
+				<button onclick="simulated . setSpeed ('one quarter');">1/4</button>
+				<button onclick="simulated . setSpeed ('half');">1/2</button>
+				<button onclick="simulated . setSpeed ('three quarters');">3/4</button>
+				<button onclick="simulated . setSpeed ('full');">FULL</button>
+				<button onclick="simulated . setSpeed ('flank');">FLANK</button>
+				<button onclick="simulation_ratio = 1;">&#xd7;1</button>
+				<button onclick="simulation_ratio = 2;">&#xd7;2</button>
+				<button onclick="simulation_ratio = 4;">&#xd7;4</button>
+				<button onclick="simulation_ratio = 8;">&#xd7;8</button>
+				<button onclick="simulation_ratio = 16;">&#xd7;16</button>
+				<button onclick="MissionAbort ();">ABORT</button>
+			</td>
+		</tr>
+		<tr>
+			<td>DEPTH:</td>
+			<td>
+				<button onclick="simulated . targetDepth ('surface');">SURFACE</button>
+				<button onclick="simulated . targetDepth ('periscope');">PERISCOPE</button>
+				<button onclick="simulated . targetDepth ('attack');">ATTACK</button>
+				<button onclick="simulated . targetDepth ('up thermal');">UP THERMAL</button>
+				<button onclick="simulated . targetDepth ('down thermal');">DOWN THERMAL</button>
+				<button onclick="simulated . targetDepth ('test');">TEST</button>
+				<button onclick="simulated . targetDepth ('crush');">CRUSH</button>
+				<button onclick="PauseSimulation (); simulated . targetDepth (prompt ('Enter depth')); ResumeSimulation ();">SPECIFY</button>
+			</td>
+		</tr>
+		<tr>
+			<td>SONAR:</td>
+			<td>
+				<button onclick="simulated . sonar . ping ();">PING</button>
+				<button id="DeployTowedArray" onclick="simulated . sonar . deployTowedArray (); document . getElementById ('CutTowedArray') . disabled = false; this . disabled = true;">DEPLOY TOWED ARRAY</button>
+				<button id="RetrieveTowedArray" onclick="simulated . sonar . retrieveTowedArray (); this . disabled = true;" disabled>RETRIEVE TOWED ARRAY</button>
+				<button id="CutTowedArray" onclick="simulated . sonar . cutTowedArray (); document . getElementById ('RetrieveTowedArray') . disabled = true; this . disabled = true;" disabled>CUT TOWED ARRAY</button>
+			</td>
+		</tr>
+		<tr>
+			<td>WEAPON:</td>
+			<td>
+				<button onclick="WeaponDetonate ();">DETONATE</button>
+				<button onclick="WeaponSearchSub ();">SEARCH SUB</button>
+				<button onclick="WeaponSearchSurface ();">SEARCH SURFACE</button>
+				<button onclick="WeaponMatchDepth ();">MATCH DEPTH</button>
+				<button onclick="WeaponPromptDepth ();">DEPTH</button>
+				<button onclick="WeaponToToWaypoint ();">GO TO</button>
+				<button onclick="WeaponSelectTarget ();">TARGET</button>
+			</td>
+		</tr>
+	</table>
+</div>
+
+
+
+</body>
+</html>
