@@ -41,8 +41,24 @@
 	</style>
 </head>
 
-<body bgcolor="#0000aa" style="font-family: arial; color: gold; text-shadow: 1px 1px red; background-size: cover;">
+<body bgcolor="#0000aa" style="font-family: arial; color: gold; text-shadow: 1px 1px red; background-size: cover; margin: 0;">
 <script src="settings.js"></script>
+
+<div style="margin: 0;"><canvas id="aukus" style="cursor: default;"/></div>
+
+<div id="info" style="position: absolute; left: 8px; bottom: 8px; font-family: arial;">
+	<table style="background: #4444ffb0; color: gold;">
+		<tr>
+			<td>Bearing:</td><td><div id="selected_bearing"/>5</td><td><div id="simulation_bearing"/>123</td>
+			<td rowspan="5"><canvas id="thermocline_canvas" width="16"></td>
+			<td rowspan="5"><div id="selected_image" style="text-align: center;"/><img src="silhouettes/Sovremenny.png"/></td>
+		</tr>
+		<tr><td>Speed:</td><td><div id="selected_speed"/>123</td><td><div id="simulated_speed"/>123</td></tr>
+		<tr><td>Depth:</td><td><div id="selected_depth"/>123</td><td><div id="simulated_depth"/>123</td></tr>
+		<tr><td>Distance:</td><td><div id="selected_distance"/>123</td><td><div id="simulated_distance"/>123</td></tr>
+		<tr><td>Thermoclines:</td><td colspan="2"><div id="thermoclines"/>1, 2, 3</td></tr>
+	</table>
+</div>
 
 <div id="ctrl" style="position: absolute; top: 8px; right: 8px; font-family: arial;">
 	<table style="background: #ff00ffb0; color: yellow;">
@@ -101,7 +117,21 @@
 	</table>
 </div>
 
+<script>
 
+var canvas = document . getElementById ('aukus');
+var ctx = canvas . getContext ('2d');
+var resize = function (delta) {
+	canvas . width = window . innerWidth - 5;
+	canvas . height = window . innerHeight - 5;
+	ctx . moveTo (0, 0);
+	ctx . lineTo (canvas . width - 10, canvas . height - 10);
+	ctx . strokeStyle = 'gold';
+	ctx . stroke ();
+};
+
+var simulation_interval = setInterval (resize, 50);
+</script>
 
 </body>
 </html>
