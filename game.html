@@ -41,7 +41,7 @@
 	</style>
 </head>
 
-<body bgcolor="#0000aa" style="font-family: arial; color: gold; text-shadow: 1px 1px red; background-size: cover; margin: 0;">
+<body bgcolor="#0000aa" style="font-family: arial; color: gold; text-shadow: 1px 1px red; background-size: cover; margin: 0; width: 100%; height: 100%; border: 0; overflow: hidden; display: block;">
 <script src="settings.js"></script>
 
 <div style="margin: 0;"><canvas id="aukus" style="cursor: default;"/></div>
@@ -122,10 +122,9 @@
 var canvas = document . getElementById ('aukus');
 var ctx = canvas . getContext ('2d');
 var resize = function (delta) {
-	canvas . width = window . innerWidth - 5;
-	canvas . height = window . innerHeight - 5;
+	canvas . width = window . innerWidth; canvas . height = window . innerHeight;
 	ctx . moveTo (0, 0);
-	ctx . lineTo (canvas . width - 10, canvas . height - 10);
+	ctx . lineTo (canvas . width, canvas . height);
 	ctx . strokeStyle = 'gold';
 	ctx . stroke ();
 };
