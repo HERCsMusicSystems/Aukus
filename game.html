@@ -121,12 +121,39 @@
 
 var canvas = document . getElementById ('aukus');
 var ctx = canvas . getContext ('2d');
+var scaling = 1;
+var DamageShift = 0;
+
+var ShiftMapPosition = function (width, height, vessel) {
+	var mile = 128 * scaling;
+	var shift = vessel === null ? {x: 0, y: 0} : {x: vessel . position . x * mile, y: vessel . position . y * mile};
+	shift . half_width = width * 0.5; shift . half_height = height * 0.5;
+	ctx . translate (shift. half_width - shift . x, shift . half_height - shift . y);
+	return shift;
+};
+
+var DrawGrid = function (shift) {
+	var mile = 128 * scaling;
+	ctx . beginPath ();
+	ctx . lineWidth = 1.5;
+	ctx . strokeStyle = 'gold';
+	var ll = shift . x - shift . half_width;
+	var lr = shift . x + shift . half_width;
+	var lt = shift . x - shift . half_height;
+	var lb = shift . x + shift . half_height;
+	var gl = Math . floor (ll / mile) * mile + mile;
+	var gr = Math . floor (lr / mile) * mile + 1;
+	var gt = Math . floor (lt / mile) * mile + mile;
+	var gb = Math . floor (lb / mile) * mile + 1;
+	for (var ind = gl; ind < gr; ind += mile) {ctx . moveTo (ind, lt); ctx . lineTo (ind, lb);}
+	for (var ind = gt; ind < gb; ind += mile) {ctx . moveTo (ll, ind); ctx . lineTo (lr, ind);}
+	ctx . stroke ();
+};
+
 var resize = function (delta) {
 	canvas . width = window . innerWidth; canvas . height = window . innerHeight;
-	ctx . moveTo (0, 0);
-	ctx . lineTo (canvas . width, canvas . height);
-	ctx . strokeStyle = 'gold';
-	ctx . stroke ();
+	if (DamageShift > 0) {var alpha = Math . random () * Math . PI * 2; ctx . translate (Math . cos (alpha) * 20, Math . sin (alpha) * 20); DamageShift --;}
+	DrawGrid (ShiftMapPosition (canvas . width, canvas . height, {position: {x: 0, y: 0}}));
 };
 
 var simulation_interval = setInterval (resize, 50);
