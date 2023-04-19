@@ -174,7 +174,7 @@ var KeyPressed = function (e) {
 	return true;
 };
 
-var OnWheel = function (e) {if (e . deltaY > 0) {if (scaling <= 0.16777216) return false; scaling /= 1.25;} else scaling *= 1.25; return false;};
+var OnWheel = function (e) {if (e . deltaY > 0) {if (scaling <= 0.16777216) return false; scaling /= 1.25; scaling = Number (scaling . toFixed (8));} else {scaling *= 1.25; scaling = Number (scaling . toFixed (8));} return false;};
 
 </script>
 
