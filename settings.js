@@ -1,6 +1,6 @@
 
-var InheritFrom = function (from, to) {
-	if (to === undefined) {to = from; from = function () {to . apply (this, arguments);}}
+var inherit = function (from, to) {
+//	if (to === undefined) {to = from; from = function () {to . apply (this, arguments);}}
 	from . prototype = Object . create (to . prototype);
 	from . prototype . constructor = from;
 	return from;
