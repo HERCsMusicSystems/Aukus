@@ -41,7 +41,7 @@
 	</style>
 </head>
 
-<body bgcolor="#0000aa" style="font-family: arial; color: gold; text-shadow: 1px 1px red; background-size: cover; margin: 0; width: 100%; height: 100%; border: 0; overflow: hidden; display: block;">
+<body bgcolor="#0000aa" onkeydown="KeyPressed (event);" style="font-family: arial; color: gold; text-shadow: 1px 1px red; background-size: cover; margin: 0; width: 100%; height: 100%; border: 0; overflow: hidden; display: block;">
 <script src="settings.js"></script>
 
 <div style="margin: 0;"><canvas id="aukus" style="cursor: default;"/></div>
@@ -130,6 +130,23 @@ var resize = function (delta) {
 };
 
 var simulation_interval = setInterval (resize, 50);
+
+var control_panel = document . getElementById ('ctrl');
+var info_panel = document . getElementById ('info');
+var KeyPressed = function (e) {
+	var key = e . key . toLowerCase ();
+	if (key === 'control' || key === 'r') return true;
+	var ws = e . shiftKey ? control_panel . style : info_panel . style;
+	switch (key) {
+	case 'arrowright': e . preventDefault (); ws . left = null; ws . right = '8px'; break;
+	case 'arrowleft': e . preventDefault (); ws . right = null; ws . left = '8px'; break;
+	case 'arrowdown': e . preventDefault (); ws . top = null; ws . bottom = '8px'; break;
+	case 'arrowup': e . preventDefault (); ws . bottom = null; ws . top = '8px'; break;
+	default: break;
+	}
+	return true;
+};
+
 </script>
 
 </body>
