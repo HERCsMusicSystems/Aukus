@@ -41,7 +41,7 @@
 	</style>
 </head>
 
-<body bgcolor="#0000aa" onkeydown="KeyPressed (event);" style="font-family: arial; color: gold; text-shadow: 1px 1px red; background-size: cover; margin: 0; width: 100%; height: 100%; border: 0; overflow: hidden; display: block;">
+<body bgcolor="#0000aa" onkeydown="KeyPressed (event);" onwheel="OnWheel (event);" style="font-family: arial; color: gold; text-shadow: 1px 1px red; background-size: cover; margin: 0; width: 100%; height: 100%; border: 0; overflow: hidden; display: block;">
 <script src="settings.js"></script>
 
 <div style="margin: 0;"><canvas id="aukus" style="cursor: default;"/></div>
@@ -173,6 +173,8 @@ var KeyPressed = function (e) {
 	}
 	return true;
 };
+
+var OnWheel = function (e) {if (e . deltaY > 0) {if (scaling <= 0.16777216) return false; scaling /= 1.25;} else scaling *= 1.25; return false;};
 
 </script>
 
