@@ -125,10 +125,14 @@ var ctx = canvas . getContext ('2d');
 var scaling = 1;
 var DamageShift = 0;
 var vessels = [];
+var time = Date . now ();
 
 var LosAngeles = new Image (); LosAngeles . src = 'silhouettes/LosAngelesTopView.png';
 var simulated = new Vessel ('Australia');
 vessels . push (simulated);
+
+var simulate = function (delta) {
+};
 
 var ShiftMapPosition = function (width, height, vessel) {
 	var mile = 128 * scaling;
