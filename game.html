@@ -132,6 +132,9 @@ var simulated = new Vessel ('Australia');
 vessels . push (simulated);
 
 var simulate = function (delta) {
+	for (var v of vessels) {
+		v . move (delta);
+	}
 };
 
 var ShiftMapPosition = function (width, height, vessel) {
@@ -174,13 +177,16 @@ var DrawSimulated = function (vessel) {
 	} else {
 		scc /= LosAngeles . width;
 		ctx . save ();
-		console . log (x, y);
 		ctx . scale (scc, scc); ctx . translate (x / scc, y / scc); ctx . rotate (p . bearing); ctx . translate (LosAngeles . width * -0.5, LosAngeles . height * -0.5); ctx . drawImage (LosAngeles, 0, 0);
 		ctx . restore ();
 	}
 };
 
 var resize = function (delta) {
+	var now = Date . now ();
+	if (delta === undefined) delta = (now - time) / 1000;
+	time = now;
+	simulate (delta);
 	canvas . width = window . innerWidth; canvas . height = window . innerHeight;
 	if (DamageShift > 0) {var alpha = Math . random () * Math . PI * 2; ctx . translate (Math . cos (alpha) * 20, Math . sin (alpha) * 20); DamageShift --;}
 	DrawGrid (ShiftMapPosition (canvas . width, canvas . height, simulated));
