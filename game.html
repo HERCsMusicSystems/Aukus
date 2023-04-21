@@ -123,6 +123,7 @@
 var canvas = document . getElementById ('aukus');
 var ctx = canvas . getContext ('2d');
 var scaling = 1;
+var simulation_ratio = 1;
 var DamageShift = 0;
 var vessels = [];
 var time = Date . now ();
@@ -186,7 +187,7 @@ var resize = function (delta) {
 	var now = Date . now ();
 	if (delta === undefined) delta = (now - time) / 1000;
 	time = now;
-	simulate (delta);
+	for (var ind = 0; ind < simulation_ratio; ind ++) simulate (delta);
 	canvas . width = window . innerWidth; canvas . height = window . innerHeight;
 	if (DamageShift > 0) {var alpha = Math . random () * Math . PI * 2; ctx . translate (Math . cos (alpha) * 20, Math . sin (alpha) * 20); DamageShift --;}
 	DrawGrid (ShiftMapPosition (canvas . width, canvas . height, simulated));
@@ -202,6 +203,12 @@ var KeyPressed = function (e) {
 	if (key === 'control' || key === 'r') return true;
 	var ws = e . shiftKey ? control_panel . style : info_panel . style;
 	switch (key) {
+	case '0': case '1': case '2': case '3': case '4': case '5': case '6': simulated . setSpeed (Number (key)); break;
+	case 'z': simulation_ratio = 1; break;
+	case 'x': simulation_ratio = 2; break;
+	case 'c': simulation_ratio = 4; break;
+	case 'v': simulation_ratio = 8; break;
+	case 'b': simulation_ratio = 16; break;
 	case 'arrowright': e . preventDefault (); ws . left = null; ws . right = '8px'; break;
 	case 'arrowleft': e . preventDefault (); ws . right = null; ws . left = '8px'; break;
 	case 'arrowdown': e . preventDefault (); ws . top = null; ws . bottom = '8px'; break;
