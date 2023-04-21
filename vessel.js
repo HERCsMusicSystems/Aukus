@@ -1,4 +1,7 @@
 
+var simulated = null;
+var selected = null;
+
 var Vessel = function (country) {
 	this . position = {x: 0, y: 0, depth: 0, bearing: 0};
 	this . speed = {x: 0, y: 0, depth: 0, bearing: 0, index: 0};
