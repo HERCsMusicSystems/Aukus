@@ -170,6 +170,7 @@ var DrawSimulated = function (vessel) {
 	var p = vessel . position;
 	var mile = 128 * scaling;
 	var x = p . x * mile, y = p . y * mile;
+	vessel . DrawTrail (ctx, mile);
 	if (scc < 24) {
 		var alpha = Math . cos (p . bearing) * 12, beta = Math . sin (p . bearing) * 12;
 		ctx . save ();

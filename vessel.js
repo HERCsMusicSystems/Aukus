@@ -10,10 +10,17 @@ var Vessel = function (country) {
 	this . noises = [60, 120, 480, 4800, 30000, 190000, 1200000];
 	this . TargetBearing = null;
 	this . BearingSpeeds = [0, 2 * Math . PI / 180, 4 * Math . PI / 180, 6 * Math . PI / 180, 4 * Math . PI / 180, 2 * Math . PI / 180, 1 * Math . PI / 180];
+	this . trail = {trail: [], delta: 24, length: 15, initial: 24};
 	this . country = country;
 };
 
 Vessel . prototype . move = function (delta) {
+	this . trail . delta -= delta;
+	if (this . trail . delta < 0) {
+		this . trail . trail . push ({x: this . position . x, y: this . position . y});
+		this . trail . delta = this . trail . initial;
+		while (this . trail . trail . length > this . trail . length) this . trail . trail . shift ();
+	}
 	var knot = delta / 3600;
 	this . position . x += (this . speed . x * Math . cos (this . position . bearing) + this . speed . y * Math . sin (this . position . bearing)) * knot;
 	this . position . y += (this . speed . x * Math . sin (this . position . bearing) - this . speed . y * Math . cos (this . position . bearing)) * knot;
@@ -51,3 +58,8 @@ Vessel . prototype . setSpeed = function (index) {
 	this . noise = this . noises [index];
 };
 
+Vessel . prototype . DrawTrail = function (ctx, mile) {
+	ctx . strokeStyle = 'white';
+	ctx . lineWidth = 2;
+	for (var tr of this . trail . trail) {ctx . beginPath (); ctx . arc (tr . x * mile, tr . y * mile, 1, 0, 6.28); ctx . stroke ();}
+};
