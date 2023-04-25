@@ -11,7 +11,7 @@ var ranks = {
 	'United Kingdom': ['Sub-Lieutenant', 'Lieutenant', 'Lieutenant Commander', 'Commander', 'Captain', 'Commodore'],
 	USA: ['Ensign', 'Lieutenant', 'Lieutenant Commander', 'Commander', 'Captain'],
 	Russia: ['Лейтенант', 'Старший лейтенант', 'Капитан-лейтенант', 'Капитан третьего ранга', 'Капитан второго ранга', 'Капитан'],
-	Polad: ['Podporucznik', 'Porucznik', 'Kapitan', 'Komandor-Podporucznik', 'Komandor'],
+	Poland: ['Podporucznik', 'Porucznik', 'Kapitan', 'Komandor-Podporucznik', 'Komandor'],
 	Germany: ['Leutnant', 'Oberleutnant', 'Kapitän­Leutnant', 'Kapitän'],
 	France: ['Enseigne', 'Lieutenant', 'Capitaine']
 };

@@ -44,14 +44,14 @@
 
 <body bgcolor="#0000aa" style="font-family: arial; color: gold; text-shadow: 1px 1px red; background-size: cover; background-repeat: no-repeat no-repeat; min-height: 100vh; scrollbar-width: none;">
 
-<h1>AUKUS Submarine Simulator</h1>
+<h1>AUKUS Submarine Simulator <img id="side_selector_flag" src="flags/usa.png" height="30px"/></h1>
 
 
 <script src="background_ctrl.js"></script>
 <script src="audio_ctrl.js"></script>
 <script src="settings.js"></script>
 
-Side: <select id="side_selector" onchange="localStorage . setItem ('side', side = this . value); ReadCommanders ();" autocomplete="off"></select>
+Side: <select id="side_selector" onchange="localStorage . setItem ('side', side = this . value); ReadCommanders (); ChangeFlag (this . value)" autocomplete="off"></select>
 
 &nbsp;&nbsp;&nbsp;&nbsp;Music On: <input type="checkbox" id="music_on" autocomplete="off" onchange="localStorage . setItem ('music_on', music_on = this . checked); if (music_on) PlayAudio ('Beowulf'); else PauseAudio ('Beowulf');"/>
 
@@ -71,7 +71,9 @@ Side: <select id="side_selector" onchange="localStorage . setItem ('side', side 
 
 
 <script>
+var ChangeFlag = function (flag) {document . getElementById ('side_selector_flag') . src = 'flags/' + flag + '.png';};
 for (var country of sides) document . getElementById ('side_selector') . options . add (new Option (country, country, false, country === side));
+ChangeFlag (side);
 document . getElementById ('music_on') . checked = music_on;
 if (music_on) PlayAudio ('Beowulf'); else PauseAudio ('Beowulf');
 document . getElementById ('effects_on') . checked = effects_on;
