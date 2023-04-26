@@ -120,6 +120,9 @@
 
 <script>
 
+var DrawFloor = function () {};
+var FloorImage = new Image (); FloorImage . src = 'floors/neptune_trench_map.png';
+
 var canvas = document . getElementById ('aukus');
 var ctx = canvas . getContext ('2d');
 var scaling = 1;
@@ -127,6 +130,13 @@ var simulation_ratio = 1;
 var DamageShift = 0;
 var vessels = [];
 var time = Date . now ();
+
+DrawFloor = function () {
+	ctx . save ();
+	ctx . scale (scaling, scaling);
+	ctx . drawImage (FloorImage, 0, 0);
+	ctx . restore ();
+};
 
 var LosAngeles = new Image (); LosAngeles . src = 'silhouettes/LosAngelesTopView.png';
 simulated = new Vessel ('Australia');
@@ -206,6 +216,7 @@ var resize = function (delta) {
 	canvas . width = window . innerWidth; canvas . height = window . innerHeight;
 	if (DamageShift > 0) {var alpha = Math . random () * Math . PI * 2; ctx . translate (Math . cos (alpha) * 20, Math . sin (alpha) * 20); DamageShift --;}
 	DrawGrid (ShiftMapPosition (canvas . width, canvas . height, simulated));
+	DrawFloor ();
 	DrawSimulated (simulated);
 };
 
