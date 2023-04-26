@@ -1,0 +1,166 @@
+<!DOCTYPE html><meta charset="UTF-8"/>
+<!--
+///////////////////////////////////////////////////////////////////////////////////
+//                     Copyright (C) 2020 Dr Robert P. Wolf                      //
+//                                                                               //
+// Permission is hereby granted, free of charge, to any person obtaining a copy  //
+// of this software and associated documentation files (the "Software"), to deal //
+// in the Software without restriction, including without limitation the rights  //
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell     //
+// copies of the Software, and to permit persons to whom the Software is         //
+// furnished to do so, subject to the following conditions:                      //
+//                                                                               //
+// The above copyright notice and this permission notice shall be included in    //
+// all copies or substantial portions of the Software.                           //
+//                                                                               //
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR    //
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,      //
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE   //
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER        //
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, //
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN     //
+// THE SOFTWARE.                                                                 //
+///////////////////////////////////////////////////////////////////////////////////
+-->
+<html>
+<head>
+	<title>Floor</title>
+	<link rel="shortcut icon" type="image/x-icon" href="h.ico"/>
+	<style>
+	td {padding: 0px;}
+	button {padding: 0px 0px;}
+	</style>
+</head>
+
+<body style="margin: 0px; background-color: blue;">
+	<div style="position: absolute; bottom: 10px; right: 10px;">
+		<input type="button" value="RESET 3" onclick="javascript: Reset (3);"/>
+		<input type="button" value="RESET 5" onclick="javascript: Reset (5);"/>
+		<input type="button" value="RESET 7" onclick="javascript: Reset (7);"/>
+		<input type="button" value="RESET *" onclick="javascript: Reset ();"/>
+		<input type="button" value="STORE" onclick="javascript: localStorage . setItem ('floor', JSON . stringify (floor));"/>
+		<input type="button" value="RECALL" onclick="javascript: floor = JSON . parse (localStorage . getItem ('recall')); csize = floor . length; repaint ();"/>
+	</div>
+	<canvas id="editor" width="1200" height="600" onwheel="javascript: adjust (event);" onmousedown="javascript: down (event);" onmousemove="javescript: move (event);" onmouseup="javascript: up (event);" oncontextmenu="javascript: event . preventDefault ();"/>
+</body>
+
+<script type="text/javascript" encoding="UTF-8">
+
+var floor_shift = {x: 0, y: 0};
+var dragging_line = null;
+var dragging_to = null;
+
+var csize = 3;
+var floor = [];
+
+var Reset = function (s) {
+	if (s === undefined) {
+		s = prompt ("RESET SIZE?");
+		if (! s) return;
+		s = Number (s);
+		if (! s) return;
+	}
+	csize = s;
+	floor = [];
+	for (var row = 0; row < csize; row += 1) {
+		var array = []
+		for (var column = 0; column < csize; column += 1) array . push (0);
+		floor . push (array);
+	}
+	repaint ();
+};
+
+var fl = localStorage . getItem ('floor');
+if (fl !== null) {floor = JSON . parse (fl); csize = floor . length;}
+
+var canvas = document . getElementById ('editor');
+var ctx = canvas . getContext ('2d');
+// ctx . translate (16, 16);
+
+var ge = function (e) {
+	var rect = canvas . getBoundingClientRect ();
+	var c = {x: e . clientX - rect . left, y: e . clientY - rect . top};
+	c . xx = Math . floor ((c . x - floor_shift . x) / 32);
+	c . yy = Math . floor ((c . y - floor_shift . y) / 32);
+	return c;
+};
+var adjust = function (e) {
+	var c = ge (e);
+	if (c . xx < 0 || c . xx >= floor . length) return;
+	var column = floor [c . xx];
+	if (c . yy < 0 || c . yy >= column . length) return;
+	column [c . yy] += (e . buttons != 0 ? 16 : 1) * (e . deltaY > 0 ? 1 : -1);
+	if (column [c . yy] < 0) column [c . yy] = 0;
+	if (column [c . yy] > 255) column [c . yy] = 255;
+	repaint ();
+	// console . log (x, y, e);
+};
+
+// cubic:
+// a = x / 2 + z / 6 + y / 2
+// b = 2 y - 2.5 x - z / 2
+// c = 3 x - 1.5 y + z / 3
+
+var move = function (e) {
+	if (! dragging_line) return;
+	if (e . buttons > 1) {floor_shift . x += e . movementX; floor_shift . y += e . movementY; repaint (); return;}
+	dragging_to = ge (e);
+	if (dragging_to . xx < 0 || dragging_to . xx >= csize || dragging_to . yy < 0 || dragging_to . yy >= csize) return;
+	var dx = dragging_to . xx - dragging_line . xx;
+	var dy = dragging_to . yy - dragging_line . yy;
+	if (dx > 0) for (var x = 0; x <= dx; x += 1) floor [dragging_line . xx + x] [Math . round (dragging_line . yy + dy * x / dx)] = floor [dragging_line . xx] [dragging_line . yy];
+	if (dx < 0) for (var x = 0; x >= dx; x -= 1) floor [dragging_line . xx + x] [Math . round (dragging_line . yy + dy * x / dx)] = floor [dragging_line . xx] [dragging_line . yy];
+	if (dy > 0) for (var y = 0; y <= dy; y += 1) floor [Math . round (dragging_line . xx + dx * y / dy)] [dragging_line . yy + y] = floor [dragging_line . xx] [dragging_line . yy];
+	if (dy < 0) for (var y = 0; y >= dy; y -= 1) floor [Math . round (dragging_line . xx + dx * y / dy)] [dragging_line . yy + y] = floor [dragging_line . xx] [dragging_line . yy];
+	repaint ();
+};
+var down = function (e) {
+	dragging_line = ge (e);
+	dragging_to = dragging_line;
+};
+var up = function (e) {
+	dragging_line = null;
+	dragging_to = null;
+	repaint ();
+};
+
+var repaint = function () {
+	canvas . width = window . innerWidth; canvas . height = window . innerHeight;
+	ctx . textAlign = 'center';
+	ctx . textBaseline = 'middle';
+	ctx . clearRect (0, 0, canvas . width, canvas . height);
+	for (var ind in floor) {
+		var column = floor [ind];
+		for (var sub in column) {
+			var x = 16 + floor_shift . x + ind * 32; var y = 16 + floor_shift . y + sub * 32;
+			ctx . beginPath ();
+			ctx . arc (x, y, 16, 0, Math . PI + Math . PI);
+			var v = column [sub] . toString (16) . padStart (2, 0);
+			ctx . fillStyle = '#' + v + '0000';
+			ctx . fill ();
+			ctx . fillStyle = 'white';
+			ctx . fillText (v . toUpperCase (), x, y);
+		}
+	}
+	if (dragging_line) {
+		ctx . strokeStyle = 'yellow';
+		ctx . beginPath (); ctx . moveTo (dragging_line . x, dragging_line . y); ctx . lineTo (dragging_to . x, dragging_to . y); ctx . stroke ();
+	}
+	ctx . fillStyle = 'gold';
+	ctx . font = '16px arial';
+	ctx . fillText (Math . round (floor_shift . x / -32) + 1, 48, 10);
+	ctx . fillText (Math . round ((floor_shift . x - canvas . width) / -32) - 1, canvas . width - 48, 10);
+	ctx . fillText (Math . round ((floor_shift . x - canvas . width / 2) / -32) - 2, canvas . width / 2 - 48, 10);
+	ctx . fillText (Math . round (floor_shift . y / -32) + 1, 10, 48);
+	ctx . fillText (Math . round ((floor_shift . y - canvas . height) / -32) - 1, 10, canvas . height - 48);
+	ctx . fillText (Math . round ((floor_shift . y - canvas . height / 2) / -32) - 2, 10, canvas . height / 2 - 48);
+};
+
+if (floor . length < 1) Reset (3);
+
+setTimeout (function () {repaint ();}, 200);
+
+</script>
+
+
+</html>

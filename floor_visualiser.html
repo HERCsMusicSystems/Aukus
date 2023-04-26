@@ -1,0 +1,261 @@
+<!DOCTYPE html><meta charset="UTF-8"/>
+<!--
+///////////////////////////////////////////////////////////////////////////////////
+//                     Copyright (C) 2020 Dr Robert P. Wolf                      //
+//                                                                               //
+// Permission is hereby granted, free of charge, to any person obtaining a copy  //
+// of this software and associated documentation files (the "Software"), to deal //
+// in the Software without restriction, including without limitation the rights  //
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell     //
+// copies of the Software, and to permit persons to whom the Software is         //
+// furnished to do so, subject to the following conditions:                      //
+//                                                                               //
+// The above copyright notice and this permission notice shall be included in    //
+// all copies or substantial portions of the Software.                           //
+//                                                                               //
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR    //
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,      //
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE   //
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER        //
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, //
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN     //
+// THE SOFTWARE.                                                                 //
+///////////////////////////////////////////////////////////////////////////////////
+-->
+<html>
+<head>
+	<title>Floor</title>
+	<link rel="shortcut icon" type="image/x-icon" href="h.ico"/>
+	<style>
+	td {padding: 0px;}
+	button {padding: 0px 0px;}
+	</style>
+</head>
+
+<body style="margin: 0px; background-color: blue;">
+	<div style="position: absolute; bottom: 10px; left: 10px; font-family: arial; background-color: yellow; border-radius: 8px; margin: 8px; padding: 8px;">
+		<input type="checkbox" id="grid" onchange="javascript: repaint ();">GRID</input><br/>
+		<input type="checkbox" id="cubic" onchange="javascript: repaint ();">CUBIC</input><br/>
+		<input type="checkbox" id="bezier" onchange="javascript: repaint ();">BEZIER</input><br/>
+		<input type="button" value="RESAMPLE &#x00D7 2;" onclick="javascript: floor = resample (floor, 0.5); repaint ();"/><br/>
+		<input type="button" value="RESAMPLE &#x00D7 4;" onclick="javascript: floor = resample (floor, 0.25); repaint ();"/><br/>
+		<input type="button" value="STORE" onclick="javascript: localStorage . setItem ('recall', JSON . stringify (floor));"/><br/>
+		<input type="button" value="EXPORT FLOOR" onclick="javascript: Export ('floor');"/><br/>
+		<input type="button" value="EXPORT MAP" onclick="javascript: Export ('map');"/><br/>
+	</div>
+	<canvas id="visualiser" width="1200" height="600" onwheel="javascript: adjust (event);" onmousedown="javascript: down (event);" onmousemove="javescript: move (event);" onmouseleave="javascript: up (event);" onmouseup="javascript: up (event);" oncontextmenu="javascript: event . preventDefault ();"/>
+</body>
+
+<script type="text/javascript">
+
+var rebez = function (floor, row, index, nf, step) {
+	var ps = floor [row];
+	var x = ps [index]; var y = ps [index + 1]; var z = ps [index + 2];
+	x = (x + y) / 2; z = (z + y) / 2;
+	for (var t = 0; t < 1; t += step) {
+		var tt = 1 - t;
+		var xy = t * y + tt * x;
+		var yz = t * z + tt * y;
+		var xyz = t * yz + tt * xy;
+		nf . push (xyz);
+	}
+};
+
+var resubez = function (floor, sub, nf, nff, step) {
+	var xx = nf [sub]; var yy = nf [sub + 1]; var zz = nf [sub + 2];
+	for (var t = 0; t < 1; t += step) {
+		var row = [];
+		for (var ind in xx) {
+			var x = xx [ind]; var y = yy [ind]; var z = zz [ind];
+			x = (x + y) / 2; z = (z + y) / 2;
+			var tt = 1 - t;
+			var xy = t * y + tt * x;
+			var yz = t * z + tt * y;
+			var xyz = t * yz + tt * xy;
+			row . push (Math . round (xyz));
+		}
+		nff . push (row);
+	}
+};
+
+var resample = function (floor, step) {
+	var nf = [];
+	for (var ind in floor) {
+		var column = floor [ind];
+		column . unshift (column [0]);
+		column . push (column [column . length - 1]);
+		var nc = [];
+		for (var sub = 0; sub < column . length - 2; sub ++) rebez (floor, ind, sub, nc, step);
+		nc . push (column [column . length - 1]);
+		nf . push (nc);
+	}
+	nf . unshift (nf [0]);
+	nf . push (nf [nf . length - 1]);
+	var nff = [];
+	for (var sub = 0; sub < nf . length - 2; sub ++) resubez (floor, sub, nf, nff, step);
+	nff . push (nf [nf . length - 1]);
+	return nff;
+};
+
+var canvas = document . getElementById ('visualiser');
+var ctx = canvas . getContext ('2d');
+
+var screen = {x: 0, y: 0, z: 500, alpha: 0, alphaCos: 1, alphaSin: 0, beta: 0, betaCos: 1, betaSin: 0, zee: 0};
+
+var lineto = function (x, y, z) {
+	var xx = x * screen . alphaCos - z * screen . alphaSin;
+	var zz = z * screen . alphaCos + x * screen . alphaSin;
+	var yy = y * screen . betaCos - zz * screen . betaSin;
+	zz = zz * screen . betaCos + y * screen . betaSin;
+	zz += screen . z + screen . zee;
+	if (zz <= 0) return;
+	ctx . lineTo (screen . z * (xx + screen . x) / zz, screen . z * (yy + screen . y) / zz);
+};
+
+var floor = JSON . parse (localStorage . getItem ('floor'));
+
+var dragging = false;
+var move = function (e) {
+	if (! dragging) return;
+	if (e . buttons < 2) {screen . x += e . movementX; screen . y += e . movementY;}
+	else {
+		screen . alpha += 0.01 * e . movementX; screen . alphaCos = Math . cos (screen . alpha); screen . alphaSin = Math . sin (screen . alpha);
+		screen . beta += 0.01 * e . movementY; screen . betaCos = Math . cos (screen . beta); screen . betaSin = Math . sin (screen . beta);
+	}
+	repaint ();
+};
+var adjust = function (e) {screen . zee += (e . deltaX + e . deltaY + e . deltaZ) * 4; repaint ();};
+var up = function () {dragging = false;};
+var down = function () {dragging = true;};
+
+var section = function (row, index, csize, cells, to) {
+	if (to === undefined) to = 2;
+	var ps = floor [row]; var p0 = ps [index];
+	var x = ps [index + 1] - p0; var y = ps [index + 2] - p0; var z = ps [index + 3] - p0;
+	var a = x / 2 + z / 6 - y / 2;
+	var b = 2 * y - 2.5 * x - z / 2;
+	var c = 3 * x - 1.5 * y + z / 3;
+	for (var ind = 0; ind <= to; ind += 0.0625) {
+		var v = a * ind * ind * ind + b * ind * ind + c * ind;
+		lineto ((index + ind) * csize - cells, 0 - v / 2 - p0 / 2, row * csize - cells);
+	}
+	return 12 * a + 4 * b + c;
+};
+
+var subsection = function (row, index, csize, cells, delta, to) {
+	if (to === undefined) to = 1;
+	var ps = floor [row]; var p0 = ps [index];
+	var x = ps [index + 1] - p0; var y = ps [index + 2] - p0;
+	var a = y / 4 + delta / 2 - x;
+	var b = 2 * x - 1.5 * delta - y / 4;
+	for (var ind = 0; ind <= to; ind += 0.0625) {
+		var v = a * ind * ind * ind + b * ind * ind + delta * ind;
+		lineto ((index + ind) * csize - cells, 0 - v / 2 - p0 / 2, row * csize - cells);
+	}
+	return 3 * a + 2 * b + delta;
+};
+
+var bez = function (row, index, csize, cells) {
+	var ps = floor [row];
+	var x = ps [index]; var y = ps [index + 1]; var z = ps [index + 2];
+	x = (x + y) / 2; z = (z + y) / 2;
+	for (var t = 0; t <= 1; t += 0.0625) {
+		var tt = 1 - t;
+		var xy = t * y + tt * x;
+		var yz = t * z + tt * y;
+		var xyz = t * yz + tt * xy;
+		lineto ((index + t + 0.5) * csize - cells, 0 - xyz / 2, row * csize - cells);
+	}
+};
+
+var subz = function (row, index, csize, cells) {
+	var x = floor [index] [row]; var y = floor [index + 1] [row]; var z = floor [index + 2] [row];
+	x = (x + y) / 2; z = (z + y) / 2;
+	for (var t = 0; t <= 1; t += 0.0625) {
+		var tt = 1 - t;
+		var xy = t * y + tt * x;
+		var yz = t * z + tt * y;
+		var xyz = t * yz + tt * xy;
+		lineto (row * csize - cells, 0 - xyz / 2, (index + t + 0.5) * csize - cells);
+	}
+};
+
+var repaint = function () {
+	ctx . save ();
+	canvas . width = window . innerWidth; canvas . height = window . innerHeight;
+	ctx . translate (canvas . width * 0.5, canvas . height * 0.5);
+	ctx . strokeStyle = 'white';
+	var cells = floor . length - 1;
+	var csize = 400 / cells;
+	cells *= csize / 2;
+	if (document . getElementById ('grid') . checked) {
+		for (var ind in floor) {
+			var column = floor [ind];
+			ctx . beginPath ();
+			for (var sub in column) {
+				lineto (sub * csize - cells, 0 - column [sub] / 2, Number (ind) * csize - cells);
+			}
+			ctx . stroke ();
+		}
+		for (var ind = 0; ind < floor [0] . length; ind ++) {
+			ctx . beginPath ();
+			for (var sub = 0; sub < floor . length; sub ++) {
+				lineto (ind * csize - cells, 0 - floor [sub] [ind] / 2, sub * csize - cells);
+			}
+			ctx . stroke ();
+		}
+	}
+	var d;
+	if (document . getElementById ('cubic') . checked) {
+		for (var row = 0; row < floor . length; row ++) {
+			ctx . strokeStyle = 'red'; ctx . beginPath (); d = section (row, 0, csize, cells); ctx . stroke ();
+			for (var ind = 2; ind < floor [0] . length - 3; ind ++) {ctx . beginPath (); d = subsection (row, ind, csize, cells, d); ctx . stroke ();}
+			ctx . strokeStyle = 'red'; ctx . beginPath (); d = subsection (row, floor [0] . length - 3, csize, cells, d, 2); ctx . stroke ();
+		}
+	}
+	if (document . getElementById ('bezier') . checked) {
+		for (var row = 0; row < floor . length; row ++) {
+			ctx . strokeStyle = 'lime'; ctx . beginPath ();
+			for (var ind = 0; ind < floor [0] . length - 2; ind ++) bez (row, ind, csize, cells);
+			ctx . stroke ();
+		}
+		for (var column = 0; column < floor [0] . length; column ++) {
+			ctx . strokeStyle = 'lime'; ctx . beginPath ();
+			for (var ind = 0; ind < floor . length - 2; ind ++) subz (column, ind, csize, cells);
+			ctx . stroke ();
+		}
+	}
+	ctx . restore ();
+};
+
+repaint ();
+
+var Export = function (type) {
+	var canvas = document . createElement ('canvas');
+	canvas . width = floor . length;
+	canvas . height = floor [0] . length;
+	var ctx = canvas . getContext ('2d');
+	var img = ctx . createImageData (1, 1);
+	var data = img . data;
+	data [0] = 255;
+	data [1] = 255;
+	data [2] = 255;
+	data [3] = 255;
+	for (var ind in floor) {
+		var row = floor [ind];
+		for (var sub in row) {
+			// data [0] = Math . floor (row [sub] / 32) * 8 + 192;
+			// data [1] = Math . floor (row [sub] / 32) * 8 + 192;
+			// data [2] = Math . floor (row [sub] / 32) * 8 + 192;
+			// data [3] = Math . floor (row [sub]);
+			if (type === 'map') data [3] = Math . floor (row [sub] / 20) * 20;
+			if (type === 'floor') data [3] = Math . floor (row [sub]);
+			ctx . putImageData (img, ind, sub);
+		}
+	}
+	window . location = canvas . toDataURL ('image/png');
+};
+
+</script>
+
+</html>
