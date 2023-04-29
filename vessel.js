@@ -3,6 +3,7 @@ var simulated = null;
 var selected = null;
 
 var Vessel = function (country) {
+	this . type = 'submarine'; // can also be surface, torpedo or missile
 	this . position = {x: 0, y: 0, depth: 0, bearing: 0};
 	this . speed = {x: 0, y: 0, depth: 0, bearing: 0, index: 0};
 	this . speeds = [0, 2, 8, 16, 25, 32, 40];
@@ -63,3 +64,24 @@ Vessel . prototype . DrawTrail = function (ctx, mile) {
 	ctx . lineWidth = 2;
 	for (var tr of this . trail . trail) {ctx . beginPath (); ctx . arc (tr . x * mile, tr . y * mile, 1, 0, 6.28); ctx . stroke ();}
 };
+
+Vessel . prototype . DrawSimulated = function (ctx, LosAngeles) {
+	var scc = scaling * 110 * 128 / 1852;
+	var p = this . position;
+	var mile = 128 * scaling;
+	var x = p . x * mile, y = p . y * mile;
+	this . DrawTrail (ctx, mile);
+	if (scc < 24) {
+		var alpha = Math . cos (p . bearing) * 12, beta = Math . sin (p . bearing) * 12;
+		ctx . save ();
+		ctx . lineCap = 'round'; ctx . lineWidth = 4; ctx . strokeStyle = 'lime';
+		ctx . beginPath (); ctx . moveTo (x - alpha, y - beta); ctx . lineTo (x + alpha, y + beta); ctx . stroke ();
+		ctx . restore ();
+	} else {
+		scc /= LosAngeles . width;
+		ctx . save ();
+		ctx . scale (scc, scc); ctx . translate (x / scc, y / scc); ctx . rotate (p . bearing); ctx . translate (LosAngeles . width * -0.5, LosAngeles . height * -0.5); ctx . drawImage (LosAngeles, 0, 0);
+		ctx . restore ();
+	}
+};
+
