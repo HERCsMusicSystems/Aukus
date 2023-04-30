@@ -1,9 +1,10 @@
 
 var simulated = null;
 var selected = null;
+var simulation = [];
 
 var Vessel = function (country) {
-	this . type = 'submarine'; // can also be surface, torpedo or missile
+	this . type = 'submarine'; // can also be surface, torpedo, missile or convoy
 	this . position = {x: 0, y: 0, depth: 0, bearing: 0};
 	this . speed = {x: 0, y: 0, depth: 0, bearing: 0, index: 0};
 	this . speeds = [0, 2, 8, 16, 25, 32, 40];
@@ -82,6 +83,26 @@ Vessel . prototype . DrawSimulated = function (ctx, LosAngeles) {
 		ctx . save ();
 		ctx . scale (scc, scc); ctx . translate (x / scc, y / scc); ctx . rotate (p . bearing); ctx . translate (LosAngeles . width * -0.5, LosAngeles . height * -0.5); ctx . drawImage (LosAngeles, 0, 0);
 		ctx . restore ();
+	}
+};
+
+Vessel . prototype , draw = function (ctx, ContextVessel) {
+	var colour = 'yellow';
+	if (friends [ContextVessel . country] . includes (this . country)) colour = 'lime';
+	if (enemies [ContextVessel . country] . includes (this . country)) colour = 'red;
+	mile = 128 * scaling;
+	DrawTrail (ctx, mile);
+	switch (this . type) {
+	case 'submarine':
+		DrawTrail (ctx, mile);
+		break;
+	case 'surface':
+		DrawTrail (ctx, mile);
+		break;
+	case 'torpedo':
+		Drawtrail (ctx, mile);
+		break;
+	default: break;
 	}
 };
 
