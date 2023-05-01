@@ -125,10 +125,8 @@ var FloorImage = new Image (); FloorImage . src = 'floors/neptune_trench_map.png
 
 var canvas = document . getElementById ('aukus');
 var ctx = canvas . getContext ('2d');
-var scaling = 1;
 var simulation_ratio = 1;
 var DamageShift = 0;
-var vessels = [];
 var time = Date . now ();
 
 DrawFloor = function () {
@@ -141,10 +139,14 @@ DrawFloor = function () {
 var LosAngeles = new Image (); LosAngeles . src = 'silhouettes/LosAngelesTopView.png';
 simulated = new Vessel ('Australia');
 selected = null;
-vessels . push (simulated);
+simulation . push (simulated);
+var oiler = new Vessel ('Russia');
+oiler . type = 'surface';
+oiler . position . x = -1.25; oiler . position . y = 0.035;
+simulation . push (oiler);
 
 var simulate = function (delta) {
-	for (var v of vessels) {
+	for (var v of simulation) {
 		v . move (delta);
 	}
 };
@@ -181,7 +183,7 @@ var resize = function (delta) {
 	time = now;
 	for (var ind = 0; ind < simulation_ratio; ind ++) simulate (delta);
 	var degrees = simulated . position . bearing * 180 / Math . PI + 90;
-	while (degrees > 360) degrees -= 360; while (degrees < 0) degress += 360;
+	while (degrees > 360) degrees -= 360; while (degrees < 0) degrees += 360;
 	document . getElementById ('simulated_bearing') . innerHTML = degrees . toFixed (0);
 	document . getElementById ('simulated_speed') . innerHTML = simulated . speed . x;
 	document . getElementById ('simulated_depth') . innerHTML = simulated . position . depth;
@@ -190,7 +192,7 @@ var resize = function (delta) {
 		while (degrees > 360) degrees -= 360; while (degrees < 0) degrees += 360;
 		document . getElementById ('selected_bearing') . innerHTML = degrees . toFixed (0);
 	} else document . getElementById ('selected_bearing') . innerHTML = '<>'
-	document . getElementById ('selected_speed') . innerHTML = selected ? selected . position . speed . x : '<>';
+	document . getElementById ('selected_speed') . innerHTML = selected ? selected . speed . x : '<>';
 	document . getElementById ('selected_depth') . innerHTML = selected ? selected . position . depth : '<>';
 	document . getElementById ('selected_image') . innerHTML = '';
 	canvas . width = window . innerWidth; canvas . height = window . innerHeight;
@@ -198,6 +200,7 @@ var resize = function (delta) {
 	DrawGrid (ShiftMapPosition (canvas . width, canvas . height, simulated));
 	DrawFloor ();
 	simulated . DrawSimulated (ctx, LosAngeles);
+	DrawAll (ctx);
 };
 
 var simulation_interval = setInterval (resize, 50);

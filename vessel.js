@@ -2,6 +2,7 @@
 var simulated = null;
 var selected = null;
 var simulation = [];
+var scaling = 1;
 
 var Vessel = function (country) {
 	this . type = 'submarine'; // can also be surface, torpedo, missile or convoy
@@ -86,23 +87,53 @@ Vessel . prototype . DrawSimulated = function (ctx, LosAngeles) {
 	}
 };
 
-Vessel . prototype , draw = function (ctx, ContextVessel) {
-	var colour = 'yellow';
-	if (friends [ContextVessel . country] . includes (this . country)) colour = 'lime';
-	if (enemies [ContextVessel . country] . includes (this . country)) colour = 'red;
+Vessel . prototype . draw = function (ctx, detected) {
+	if (this === simulated) return;
+	ctx . save ();
+	var status = 'unknown';
+	if (detected) {ctx . fillStyle = 'white'; status = 'unknown';}
+	else {
+		ctx . fillStyle = ctx . strokeStyle = 'yellow'; status = 'neutral';
+		if (friends [simulated . country] . includes (this . country)) {ctx . fillStyle = 'lime'; status = 'friend';}
+		if (enemies [simulated . country] . includes (this . country)) {ctx . fillStyle = 'red'; status = 'enemy';}
+	}
 	mile = 128 * scaling;
-	DrawTrail (ctx, mile);
+	var x = this . position . x * mile, y = this . position . y * mile;
 	switch (this . type) {
 	case 'submarine':
-		DrawTrail (ctx, mile);
+		this . DrawTrail (ctx, mile);
+		ctx . lineCap = 'square';
+		ctx . lineWidth = this === selected ? 3 : 2;
+		ctx . beginPath (); ctx . arc (x, y, 2, 0, Math . PI * 2); ctx . fill ();
+		ctx . strokeStyle = ctx . fillStyle;
+		switch (status) {
+		case 'enemy': ctx . moveTo (x + 8, y); ctx . lineTo (x, y + 8); ctx . lineTo (x - 8, y); break;
+		case 'friend': ctx . moveTo (x + 8, y); ctx . arc (x, y, 8, 0, Math . PI); break;
+		default: ctx . moveTo (x + 8, y); ctx . lineTo (x + 8, y + 8); ctx . lineTo (x - 8, y + 8); ctx . lineTo (x - 8, y); break;
+		}
+		ctx . stroke ();
 		break;
 	case 'surface':
-		DrawTrail (ctx, mile);
+		this . DrawTrail (ctx, mile);
+		ctx . lineCap = 'square';
+		ctx . lineWidth = this === selected ? 3 : 2;
+		ctx . beginPath (); ctx . arc (x, y, 2, 0, Math . PI * 2); ctx . fill ();
+		ctx . strokeStyle = ctx . fillStyle;
+		switch (status) {
+		case 'enemy': ctx . moveTo (x, y - 8); ctx . lineTo (x + 8, y); ctx . lineTo (x, y + 8); ctx . lineTo (x - 8, y); ctx . closePath (); break;
+		case 'friend': ctx . moveTo (x + 8, y); ctx . arc (x, y, 8, 0, Math . PI * 2); break;
+		default: ctx . moveTo (x + 8, y - 8); ctx . lineTo (x + 8, y + 8); ctx . lineTo (x - 8, y + 8); ctx . lineTo (x - 8, y - 8); ctx . closePath (); break;
+		}
+		ctx . stroke ();
 		break;
 	case 'torpedo':
-		Drawtrail (ctx, mile);
+		this . Drawtrail (ctx, mile);
 		break;
 	default: break;
 	}
+	ctx . restore ();
 };
 
+var DrawAll = function (ctx) {
+	for (var vessel of simulation) vessel . draw (ctx);
+};
