@@ -118,7 +118,67 @@
 	</table>
 </div>
 
+<div id="inventory" style="position: absolute; bottom: 8px; right: 8px;">
+	<table id="tubes" style="background: #00ffffb0; color: gold;"/>
+</div>
+
 <script>
+
+var FillInventoryPanel = function () {
+	var content = '';
+	var options = '';
+	for (var ind in simulated . tubes) {
+		var tube = simulated . tubes [ind];
+		for (var sub in tube . torpedoes) options += `<option>${sub}</option>`;
+		content += `
+<tr><td bgcolor="black" width="100" id="tube_${ind}"></td>
+	<td>
+		<select id="command_${ind}">${options}</select>
+		<button onclick="simulated . tubes [${ind}] . load (document . getElementById ('command_${ind}') . value);">LOAD</button>
+		<button onclick="simulated . tubes [${ind}] . flood ();">FLOOD</button>
+		<button onclick="simulated . tubes [${ind}] . fire ();">FIRE</button>
+		<button onclick="simulated . tubes [${ind}] . empty ();">EMPTY</button>
+	</td>
+</tr>`;
+	}
+	content += `<tr><td>INVENTORY:</td><td>`;
+	content += `</td></tr>`;
+	document . getElementById ('tubes') . innerHTML = content;	
+};
+
+/*var fill_weapons_table = function (vessel) {
+	var content = '<table style="background: #00ffffb0; color: yellow;">';
+	for (var ind in vessel . tubes) {
+		var tube = vessel . tubes [ind];
+		var commands = '';
+		for (var sub in tube . torpedoes) commands += `<option>${sub}</option>`;
+		content += `
+<tr>
+	<td bgcolor=black width="100" id="tube_${ind}"></td>
+	<td>
+		<select id="command_${ind}">${commands}</select>
+		<button onclick="javascript: simulated . tubes [${ind}] . load (document . getElementById ('command_${ind}') . value);">LOAD</button>
+		<button onclick="javascript: simulated . tubes [${ind}] . flood ();">FLOOD</button>
+		<button onclick="javascript: simulated . tubes [${ind}] . fire ((selected && selected . vessel) || waypoint, document . getElementById ('command_${ind}') . value);">FIRE</button>
+		<button onclick="javascript: simulated . tubes [${ind}] . empty ();">EMPTY</button>
+	</td>
+</tr>
+		`;
+	}
+	content += '<tr><td>Inventory</td><td id="inventory" bgcolor="blue"/></tr>';
+	for (var ind in vessel . silo) {
+		var image = vessel . silo [ind] . constructor . prototype . tube_image || vessel . silo [ind] . constructor . prototype . image;
+		content += `<tr><td bgcolor=black width="100"><img src=silhouettes/${image}.png width=100/></td><td bgcolor=blue>
+		<button style="width: 200px;" onclick="javascript: silo_launch (this, '${ind}');">LAUNCH ${ind}: ${vessel . silo [ind] . amount}</button>
+		Maximum Depth = ${vessel . silo [ind] . depth}
+		</td></tr>`;
+	}
+	content += '</table>';
+	weapons . innerHTML = content;
+	for (var ind in vessel . tubes) vessel . tubes [ind] . display_element = document . getElementById (`tube_${ind}`);
+	inventory_info = document . getElementById ('inventory');
+	update_inventory_info (vessel);
+};*/
 
 var DrawFloor = function () {};
 var FloorImage = new Image (); FloorImage . src = 'floors/neptune_trench_map.png';
@@ -138,6 +198,17 @@ DrawFloor = function () {
 
 var LosAngeles = new Image (); LosAngeles . src = 'silhouettes/LosAngelesTopView.png';
 simulated = new Vessel ('Australia');
+simulated . inventory = {
+	'Mark 48': {count: 26},
+	Harpoon: {count: 12, depth: 150}
+}
+//this . BuildTubes (this, {'Mark 48': ['Mark 48 Long Range', 'Mark 48 Fast'], Harpoon: ['Harpoon'], Tomahawk: ['Tomahawk']}, 8);
+simulated . BuildTubes ({'Mark 48': ['Mark 48 Long Range', 'Mark 48 Fast'], Harpoon: ['Harpoon']}, 2);
+
+
+
+
+
 selected = null;
 simulation . push (simulated);
 var oiler = new Vessel ('Russia');
@@ -207,10 +278,11 @@ var simulation_interval = setInterval (resize, 50);
 
 var control_panel = document . getElementById ('ctrl');
 var info_panel = document . getElementById ('info');
+var inventory_panel = document . getElementById ('inventory');
 var KeyPressed = function (e) {
 	var key = e . key . toLowerCase ();
 	if (key === 'control' || key === 'r') return true;
-	var ws = e . shiftKey ? control_panel . style : info_panel . style;
+	var ws = e . shiftKey ? control_panel . style : e . ctrlKey ? inventory_panel . style : info_panel . style;
 	switch (key) {
 	case '0': case '1': case '2': case '3': case '4': case '5': case '6': simulated . setSpeed (Number (key)); break;
 	case 'z': simulation_ratio = 1; break;
@@ -234,6 +306,8 @@ var OnMouseDown = function (e) {
 	if (e . buttons === 2) simulated . SetTargetBearing (Math . atan2 (e . clientY - canvas . height * 0.5, e . clientX - canvas . width * 0.5));
 	return false;
 };
+
+FillInventoryPanel ();
 
 </script>
 

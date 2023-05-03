@@ -4,6 +4,21 @@ var selected = null;
 var simulation = [];
 var scaling = 1;
 
+var Tube = function (vessel, settings, speed) {
+	if (speed === undefined) speed = 0.05;
+	this . flooded = 0;
+	this . flood = speed;
+	this . command = null; // flood, dry, fire, empty
+	this . torpedo = null;
+	this . torpedoes = {};
+	this . vessel = vessel;
+	for (var ind in settings) {
+		for (var sub in settings [ind]) this . torpedoes [settings [ind] [sub]] = vessel . inventory [ind];
+	}
+	this . display_element = null;
+	//for (var ind in settings) this . torpedoes [settings [ind]] = inventory;
+};
+
 var Vessel = function (country) {
 	this . type = 'submarine'; // can also be surface, torpedo, missile or convoy
 	this . position = {x: 0, y: 0, depth: 0, bearing: 0};
@@ -15,6 +30,15 @@ var Vessel = function (country) {
 	this . BearingSpeeds = [0, 2 * Math . PI / 180, 4 * Math . PI / 180, 6 * Math . PI / 180, 4 * Math . PI / 180, 2 * Math . PI / 180, 1 * Math . PI / 180];
 	this . trail = {trail: [], delta: 24, length: 15, initial: 24};
 	this . country = country;
+	this . tubes = [];
+	this . inventory = {};
+	this . silo = {};
+};
+
+//this . tubes = build_tubes (this, {'Mark 48': ['Mark 48 Long Range', 'Mark 48 Fast'], Harpoon: ['Harpoon'], Tomahawk: ['Tomahawk']}, 8);
+Vessel . prototype . BuildTubes = function (settings, amount, speed) {
+	this . tubes = [];
+	for (var ind = 0; ind < amount; ind ++) this . tubes . push (new Tube (this, settings, speed));
 };
 
 Vessel . prototype . move = function (delta) {
