@@ -130,12 +130,13 @@ var FillInventoryPanel = function () {
 	var options = '';
 	for (var ind in simulated . tubes) {
 		var tube = simulated . tubes [ind];
+		options = '';
 		for (var sub in tube . torpedoes) options += `<option>${sub}</option>`;
 		content += `
 <tr><td bgcolor="black" width="100" id="tube_${ind}"></td>
 	<td>
 		<select id="command_${ind}">${options}</select>
-		<button onclick="simulated . tubes [${ind}] . load (document . getElementById ('command_${ind}') . value);">LOAD</button>
+		<button onclick="TubeLoad (${ind}, document . getElementById ('command_${ind}') . value);">LOAD</button>
 		<button onclick="simulated . tubes [${ind}] . flood ();">FLOOD</button>
 		<button onclick="simulated . tubes [${ind}] . fire ();">FIRE</button>
 		<button onclick="simulated . tubes [${ind}] . empty ();">EMPTY</button>
@@ -311,6 +312,12 @@ var OnMouseDown = function (e) {
 };
 
 FillInventoryPanel ();
+
+var TubeLoad = function (ind, type) {
+	if (! simulated . tubes [ind] . load (type)) return;
+	var tube = document . getElementById ('tube_' + ind);
+	tube . innerHTML = `<img src="silhouettes/Mark48.png" width="100"/>`;
+};
 
 </script>
 

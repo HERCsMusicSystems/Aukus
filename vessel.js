@@ -16,6 +16,16 @@ var Tube = function (vessel, settings, speed) {
 	this . display_element = null;
 };
 
+Tube . prototype . load = function (selector) {
+	if (this . torpedo !== null) return false;
+	var SubSelector = this . torpedoes [selector];
+	var constructor = this . vessel . inventory [SubSelector] . constructor;
+	var inv = this . vessel . inventory [SubSelector];
+	if (inv . count < 1) return false; inv . count --;
+	this . torpedo = new constructor (null, 'sputnik', this . country);
+	return true;
+};
+
 var Vessel = function (country) {
 	this . type = 'submarine'; // can also be surface, torpedo, missile or convoy
 	this . position = {x: 0, y: 0, depth: 0, bearing: 0};
@@ -26,10 +36,11 @@ var Vessel = function (country) {
 	this . TargetBearing = null;
 	this . BearingSpeeds = [0, 2 * Math . PI / 180, 4 * Math . PI / 180, 6 * Math . PI / 180, 4 * Math . PI / 180, 2 * Math . PI / 180, 1 * Math . PI / 180];
 	this . trail = {trail: [], delta: 24, length: 15, initial: 24};
-	this . country = country;
 	this . tubes = [];
 	this . inventory = {};
 	this . silo = {};
+	this . country = country;
+	this . name = '';
 };
 
 Vessel . prototype . BuildTubes = function (settings, amount, speed) {
