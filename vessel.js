@@ -17,13 +17,18 @@ var Tube = function (vessel, settings, speed) {
 };
 
 Tube . prototype . load = function (selector) {
-	if (this . torpedo !== null) return false;
+	if (this . torpedo !== null) return null;
 	var SubSelector = this . torpedoes [selector];
 	var constructor = this . vessel . inventory [SubSelector] . constructor;
 	var inv = this . vessel . inventory [SubSelector];
-	if (inv . count < 1) return false; inv . count --;
+	if (inv . count < 1) return null; inv . count --;
 	this . torpedo = new constructor (null, 'sputnik', this . country);
-	return true;
+	return this . torpedo;
+};
+
+Tube . prototype . empty = function () {
+	this . torpedo = null;
+	this . flooded = 0;
 };
 
 var Vessel = function (country) {
@@ -42,6 +47,9 @@ var Vessel = function (country) {
 	this . country = country;
 	this . name = '';
 };
+
+Vessel . prototype . image = 'Default';
+Vessel . prototype . info = 'https://en.wikipedia.org/wiki/Warship';
 
 Vessel . prototype . BuildTubes = function (settings, amount, speed) {
 	this . tubes = [];

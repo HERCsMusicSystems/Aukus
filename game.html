@@ -125,7 +125,7 @@
 
 <script>
 
-var FillInventoryPanel = function () {
+var FillTubesPanel = function () {
 	var content = '';
 	var options = '';
 	for (var ind in simulated . tubes) {
@@ -139,13 +139,19 @@ var FillInventoryPanel = function () {
 		<button onclick="TubeLoad (${ind}, document . getElementById ('command_${ind}') . value);">LOAD</button>
 		<button onclick="simulated . tubes [${ind}] . flood ();">FLOOD</button>
 		<button onclick="simulated . tubes [${ind}] . fire ();">FIRE</button>
-		<button onclick="simulated . tubes [${ind}] . empty ();">EMPTY</button>
+		<button onclick="TubeEmpty (${ind});">EMPTY</button>
 	</td>
 </tr>`;
 	}
-	content += `<tr><td>INVENTORY:</td><td>`;
+	content += `<tr><td>INVENTORY:</td><td id="inventory_panel">`;
 	content += `</td></tr>`;
 	document . getElementById ('tubes') . innerHTML = content;	
+};
+
+var FillInventoryPanel = function () {
+	var content = '';
+	for (var ind in simulated . inventory) content += `[${ind}: ${simulated . inventory [ind] . count}] `;
+	document . getElementById ('inventory_panel') . innerHTML = content;
 };
 
 /*var fill_weapons_table = function (vessel) {
@@ -311,12 +317,21 @@ var OnMouseDown = function (e) {
 	return false;
 };
 
+
+FillTubesPanel ();
 FillInventoryPanel ();
 
 var TubeLoad = function (ind, type) {
-	if (! simulated . tubes [ind] . load (type)) return;
+	var torpedo = simulated . tubes [ind] . load (type);
+	if (! torpedo) return;
 	var tube = document . getElementById ('tube_' + ind);
-	tube . innerHTML = `<img src="silhouettes/Mark48.png" width="100"/>`;
+	tube . innerHTML = `<a href="${torpedo . info}" target="_blank"><img src="silhouettes/${torpedo . image}.png" width="100"/></a>`;
+	FillInventoryPanel ();
+};
+
+var TubeEmpty = function (ind) {
+	simulated . tubes [ind] . empty ();
+	tube = document . getElementById ('tube_' + ind) . innerHTML = '';
 };
 
 </script>

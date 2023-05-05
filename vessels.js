@@ -5,8 +5,17 @@ var Mark48 = function (cable, name, country) {
 	this . type = 'torpedo';
 	this . name = name;
 }; inherit (Mark48, Vessel);
+Mark48 . prototype . image = 'Mark48';
+Mark48 . prototype . info = 'https://en.wikipedia.org/wiki/Mark_48_torpedo';
 
-var Harpoon = function (cable, name, country) {};
+var Harpoon = function (cable, name, country) {
+	if (country === undefined) country = 'USA';
+	Vessel . call (this, country);
+	this . type = 'torpedo';
+	this . name = name;
+}; inherit (Harpoon, Vessel);
+Harpoon . prototype . image = 'Harpoon';
+Harpoon . prototype . info = 'https://en.wikipedia.org/wiki/Harpoon_(missile)';
 
 var Virginia = function (country) {
 	if (country === undefined) country = 'USA';
