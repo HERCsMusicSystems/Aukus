@@ -12,11 +12,8 @@ var Tube = function (vessel, settings, speed) {
 	this . torpedo = null;
 	this . torpedoes = {};
 	this . vessel = vessel;
-	for (var ind in settings) {
-		for (var sub in settings [ind]) this . torpedoes [settings [ind] [sub]] = vessel . inventory [ind];
-	}
+	for (var ind in settings) this . torpedoes [ind] = settings [ind];
 	this . display_element = null;
-	//for (var ind in settings) this . torpedoes [settings [ind]] = inventory;
 };
 
 var Vessel = function (country) {
@@ -35,7 +32,6 @@ var Vessel = function (country) {
 	this . silo = {};
 };
 
-//this . tubes = build_tubes (this, {'Mark 48': ['Mark 48 Long Range', 'Mark 48 Fast'], Harpoon: ['Harpoon'], Tomahawk: ['Tomahawk']}, 8);
 Vessel . prototype . BuildTubes = function (settings, amount, speed) {
 	this . tubes = [];
 	for (var ind = 0; ind < amount; ind ++) this . tubes . push (new Tube (this, settings, speed));

@@ -198,12 +198,15 @@ DrawFloor = function () {
 
 var LosAngeles = new Image (); LosAngeles . src = 'silhouettes/LosAngelesTopView.png';
 simulated = new Vessel ('Australia');
+var Mark48 = function (cable, name, country) {};
+var Harpoon = function (cable, name, country) {};
 simulated . inventory = {
-	'Mark 48': {count: 26},
-	Harpoon: {count: 12, depth: 150}
+	'Mark 48': {constructor: Mark48, count: 26},
+	Harpoon: {constructor: Harpoon, count: 12, depth: 150}
 }
 //this . BuildTubes (this, {'Mark 48': ['Mark 48 Long Range', 'Mark 48 Fast'], Harpoon: ['Harpoon'], Tomahawk: ['Tomahawk']}, 8);
-simulated . BuildTubes ({'Mark 48': ['Mark 48 Long Range', 'Mark 48 Fast'], Harpoon: ['Harpoon']}, 2);
+//simulated . BuildTubes ({'Mark 48': ['Mark 48 Long Range', 'Mark 48 Fast'], Harpoon: ['Harpoon']}, 2);
+simulated . BuildTubes ({'Mark 48 Long Range': 'Mark 48', 'Mark 48 Fast': 'Mark 48', Harpoon: 'Harpoon'}, 2);
 
 
 
