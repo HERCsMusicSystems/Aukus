@@ -44,6 +44,7 @@
 <body bgcolor="#0000aa" onkeydown="KeyPressed (event);" onwheel="OnWheel (event);" oncontextmenu="event . preventDefault ();" style="font-family: arial; color: gold; text-shadow: 1px 1px red; background-size: cover; margin: 0; width: 100%; height: 100%; border: 0; overflow: hidden; display: block;">
 <script src="settings.js"></script>
 <script src="vessel.js"></script>
+<script src="vessels.js"></script>
 
 <div style="margin: 0;"><canvas id="aukus" onmousedown="return OnMouseDown (event);" style="cursor: default;"/></div>
 
@@ -197,9 +198,8 @@ DrawFloor = function () {
 };
 
 var LosAngeles = new Image (); LosAngeles . src = 'silhouettes/LosAngelesTopView.png';
-simulated = new Vessel ('Australia');
-var Mark48 = function (cable, name, country) {};
-var Harpoon = function (cable, name, country) {};
+simulated = new Virginia ('Australia');
+/*simulated = new Vessel ('Australia');
 simulated . inventory = {
 	'Mark 48': {constructor: Mark48, count: 26},
 	Harpoon: {constructor: Harpoon, count: 12, depth: 150}
@@ -207,7 +207,7 @@ simulated . inventory = {
 //this . BuildTubes (this, {'Mark 48': ['Mark 48 Long Range', 'Mark 48 Fast'], Harpoon: ['Harpoon'], Tomahawk: ['Tomahawk']}, 8);
 //simulated . BuildTubes ({'Mark 48': ['Mark 48 Long Range', 'Mark 48 Fast'], Harpoon: ['Harpoon']}, 2);
 simulated . BuildTubes ({'Mark 48 Long Range': 'Mark 48', 'Mark 48 Fast': 'Mark 48', Harpoon: 'Harpoon'}, 2);
-
+*/
 
 
 
