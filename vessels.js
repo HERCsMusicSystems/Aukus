@@ -25,6 +25,8 @@ var Virginia = function (country) {
 		Harpoon: {constructor: Harpoon, count: 12, depth: 150}
 	}
 	this . BuildTubes ({'Mark 48 Long Range': 'Mark 48', 'Mark 48 Fast': 'Mark 48', Harpoon: 'Harpoon'}, 2);
+	this . name = Virginia . prototype . names . splice (Math . floor (Math . random () * Virginia . prototype . names . length), 1) [0];
+	this . class = 'Virginia SSN';
 };inherit (Virginia, Vessel);
 Virginia . prototype . image = 'Virginia';
 Virginia . prototype . info = 'https://en.wikipedia.org/wiki/Virginia-class_submarine';

@@ -33,6 +33,7 @@ Tube . prototype . empty = function () {
 
 var Vessel = function (country) {
 	this . type = 'submarine'; // can also be surface, torpedo, missile or convoy
+	this . class = 'Aukus SSN';
 	this . position = {x: 0, y: 0, depth: 0, bearing: 0};
 	this . speed = {x: 0, y: 0, depth: 0, bearing: 0, index: 0};
 	this . speeds = [0, 2, 8, 16, 25, 32, 40];
