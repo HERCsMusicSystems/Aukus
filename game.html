@@ -85,14 +85,14 @@
 		<tr>
 			<td>DEPTH:</td>
 			<td>
-				<button onclick="simulated . targetDepth ('surface');">SURFACE</button>
-				<button onclick="simulated . targetDepth ('periscope');">PERISCOPE</button>
-				<button onclick="simulated . targetDepth ('attack');">ATTACK</button>
-				<button onclick="simulated . targetDepth ('up thermal');">UP THERMAL</button>
-				<button onclick="simulated . targetDepth ('down thermal');">DOWN THERMAL</button>
-				<button onclick="simulated . targetDepth ('test');">TEST</button>
-				<button onclick="simulated . targetDepth ('crush');">CRUSH</button>
-				<button onclick="PauseSimulation (); simulated . targetDepth (prompt ('Enter depth')); ResumeSimulation ();">SPECIFY</button>
+				<button onclick="simulated . setDepth ('surface');">SURFACE</button>
+				<button onclick="simulated . setDepth ('periscope');">PERISCOPE</button>
+				<button onclick="simulated . setDepth ('attack');">ATTACK</button>
+				<button onclick="simulated . setDepth ('up');">UP THERMAL</button>
+				<button onclick="simulated . setDepth ('down');">DOWN THERMAL</button>
+				<button onclick="simulated . setDepth ('test');">TEST</button>
+				<button onclick="simulated . setDepth ('crush');">CRUSH</button>
+				<button onclick="SpecifyDepth ();">SPECIFY</button>
 			</td>
 		</tr>
 		<tr>
@@ -219,7 +219,12 @@ simulated . BuildTubes ({'Mark 48 Long Range': 'Mark 48', 'Mark 48 Fast': 'Mark 
 */
 
 
-
+var SpecifyDepth = function () {
+//	PauseSimulation ();
+	var ret = Number (prompt ('Enter Depth'));
+	if (! isNaN (ret)) simulated . setDepth (ret);
+//	ResumeSimulation ()
+};
 
 selected = null;
 simulation . push (simulated);

@@ -46,8 +46,8 @@ var Vessel = function (country) {
 	this . DivingSpeeds = [0, 10, 20, 30, 40, 50, 60];
 	this . DivingSpeed = 0;
 	this . TargetSpeed = 0;
-	this . PeriscopeDepth = 60, AttackDepth = 150, TestDepth = 1600, CollapseDepth = 2400; // US Navy = 2/3; Royal Nave = 4/7; German Kriegsmarine = 1/2.
-	this . AttackDepth = 150;
+	this . PeriscopeDepth = 60; this . AttackDepth = 150; this . TestDepth = 1600; this . CollapseDepth = 2400; // US Navy = 2/3; Royal Nave = 4/7; German Kriegsmarine = 1/2.
+	this . DepthTarget = 0;
 	this . trail = {trail: [], delta: 24, length: 15, initial: 24};
 	this . tubes = [];
 	this . inventory = {};
@@ -118,7 +118,16 @@ Vessel . prototype . setSpeed = function (index) {
 };
 
 Vessel . prototype . setDepth = function (depth) {
-	this . DepthTarget = depth;
+	switch (depth) {
+	case 'surface': this . DepthTarget = 0; break;
+	case 'periscope': this . DepthTarget = this . PeriscopeDepth; break;
+	case 'attack': this . DepthTarget = this . AttackDepth; break;
+	case 'up': for (var t of thermoclines . slice () . reverse ()) {if (this . position . depth > t . depth) {this . DepthTarget = t . depth - 10; break;}} break;
+	case 'down': for (var t of thermoclines) {if (this . position . depth < t . depth) {this . DepthTarget = t . depth + 10; break;}} break;
+	case 'test': this . DepthTarget = this . TestDepth; break;
+	case 'crush': case 'collapes': this . DepthTarget = this . CollapseDepth; break;
+	default: this . DepthTarget = depth;
+	}
 };
 
 Vessel . prototype . DrawTrail = function (ctx, mile) {
