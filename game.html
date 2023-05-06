@@ -269,7 +269,7 @@ var resize = function (delta) {
 	while (degrees > 360) degrees -= 360; while (degrees < 0) degrees += 360;
 	document . getElementById ('simulated_bearing') . innerHTML = degrees . toFixed (0);
 	document . getElementById ('simulated_speed') . innerHTML = simulated . speed . x;
-	document . getElementById ('simulated_depth') . innerHTML = simulated . position . depth;
+	document . getElementById ('simulated_depth') . innerHTML = Math . floor (simulated . position . depth);
 	if (selected) {
 		degrees = simulated . position . bearing * 180 / Math . PI + 90;
 		while (degrees > 360) degrees -= 360; while (degrees < 0) degrees += 360;

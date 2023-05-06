@@ -43,6 +43,11 @@ var Vessel = function (country) {
 	this . noises = [60, 120, 480, 4800, 30000, 190000, 1200000];
 	this . TargetBearing = null;
 	this . BearingSpeeds = [0, 2 * Math . PI / 180, 4 * Math . PI / 180, 6 * Math . PI / 180, 4 * Math . PI / 180, 2 * Math . PI / 180, 1 * Math . PI / 180];
+	this . DivingSpeeds = [0, 10, 20, 30, 40, 50, 60];
+	this . DivingSpeed = 0;
+	this . TargetSpeed = 0;
+	this . PeriscopeDepth = 60, AttackDepth = 150, TestDepth = 1600, CollapseDepth = 2400; // US Navy = 2/3; Royal Nave = 4/7; German Kriegsmarine = 1/2.
+	this . AttackDepth = 150;
 	this . trail = {trail: [], delta: 24, length: 15, initial: 24};
 	this . tubes = [];
 	this . inventory = {};
@@ -78,6 +83,14 @@ Vessel . prototype . move = function (delta) {
 			else this . position . bearing -= this . BearingSpeeds [this . speed . index];
 		}
 	}
+	if (this . position . depth !== this . TargetDepth) {
+		var dspeed = this . DivingSpeed * delta;
+		if (Math . abs (this . DepthTarget - this . position . depth) < dspeed) {
+			this . position . depth = this . DepthTarget;
+		} else {
+			this . position . depth += this . DepthTarget > this . position . depth ? dspeed : - dspeed;
+		}
+	}
 };
 
 Vessel . prototype . SetTargetBearing = function (bearing) {
@@ -101,6 +114,11 @@ Vessel . prototype . setSpeed = function (index) {
 	}
 	if (index < 0) index = 0; if (index > 6) index = 6; this . speed . x = this . speeds [index]; this . speed . index = index;
 	this . noise = this . noises [index];
+	this . DivingSpeed = this . DivingSpeeds [index];
+};
+
+Vessel . prototype . setDepth = function (depth) {
+	this . DepthTarget = depth;
 };
 
 Vessel . prototype . DrawTrail = function (ctx, mile) {
