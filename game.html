@@ -53,12 +53,12 @@
 		<tr>
 			<td>Bearing:</td><td><div id="selected_bearing" style="text-align: right;">5</td><td><div id="simulated_bearing" style="text-align: right;">123</td>
 			<td rowspan="5"><canvas id="thermocline_canvas" width="16"></td>
-			<td rowspan="5"><div id="selected_image" style="text-align: center;"><img src="silhouettes/Sovremenny.png"/></td>
+			<td rowspan="5"><div id="selected_image" style="text-align: center;"></td>
 		</tr>
 		<tr><td>Speed:</td><td><div id="selected_speed" style="text-align: right;">123</td><td><div id="simulated_speed" style="text-align: right;">123</td></tr>
 		<tr><td>Depth:</td><td><div id="selected_depth" style="text-align: right;">123</td><td><div id="simulated_depth" style="text-align: right;">123</td></tr>
 		<tr><td>Distance:</td><td><div id="selected_distance" style="text-align: right;">123</td><td><div id="selected_bearing" style="text-align: right;">123</td></tr>
-		<tr><td>Thermoclines:</td><td colspan="2"><div id="thermoclines">1, 2, 3</td></tr>
+		<tr><td>Thermoclines:</td><td colspan="2"><div id="thermoclines"></td></tr>
 	</table>
 </div>
 
@@ -193,6 +193,8 @@ var FloorImage = new Image (); FloorImage . src = 'floors/neptune_trench_map.png
 
 var canvas = document . getElementById ('aukus');
 var ctx = canvas . getContext ('2d');
+var thermocline_canvas = document . getElementById ('thermocline_canvas');
+var ctc = thermocline_canvas . getContext ('2d');
 var simulation_ratio = 1;
 var DamageShift = 0;
 var time = Date . now ();
@@ -276,7 +278,16 @@ var resize = function (delta) {
 	document . getElementById ('selected_speed') . innerHTML = selected ? selected . speed . x : '<>';
 	document . getElementById ('selected_depth') . innerHTML = selected ? selected . position . depth : '<>';
 	document . getElementById ('selected_image') . innerHTML = '';
+	var thermals = '';
+	for (var thermo of thermoclines) thermals += `${thermo . depth} `;
+	document . getElementById ('thermoclines') . innerHTML = thermals;
 	canvas . width = window . innerWidth; canvas . height = window . innerHeight;
+	var floor = Floor (simulated . position) * 0.05;
+	ctc . fillStyle = 'green'; ctc . strokeStyle = 'gold'; ctc . fillRect (0, 0, 16, floor);
+	ctc . strokeStyle = 'gold';
+	ctc . beginPath (); for (var thermo of thermoclines) {var t = 1 + thermo . depth * 0.05; ctc . moveTo (0, t); ctc . lineTo (16, t);} ctc . stroke ();
+	ctc . beginPath (); var t = 1 + simulated . position . depth * 0.05; ctc . moveTo (0, t); ctc . lineTo (16, t); ctc . strokeStyle = 'red'; ctc . stroke ();
+	ctc . fillStyle = 'gray'; ctc . fillRect (0, floor, 16, 200);
 	if (DamageShift > 0) {var alpha = Math . random () * Math . PI * 2; ctx . translate (Math . cos (alpha) * 20, Math . sin (alpha) * 20); DamageShift --;}
 	DrawGrid (ShiftMapPosition (canvas . width, canvas . height, simulated));
 	DrawFloor ();

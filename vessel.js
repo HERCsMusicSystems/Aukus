@@ -3,6 +3,8 @@ var simulated = null;
 var selected = null;
 var simulation = [];
 var scaling = 1;
+var thermoclines = [{depth: 160, attenuation: 0.01}, {depth: 320, attenuation: 0.01}, {depth: 600, attenuation: 0.001}, {depth : 1200, attenuation: 0.001}];
+var Floor = function (position) {return 3000;};
 
 var Tube = function (vessel, settings, speed) {
 	if (speed === undefined) speed = 0.05;
