@@ -46,6 +46,9 @@ for (var country of sides) {
 	if (! localStorage . getItem (country)) localStorage . setItem (country, JSON . stringify (commanders [country]));
 }
 
+var MissionBackground = '';
+var MissionObjective = '';
+var MissionConstructor = null;
 var LoadJavaScript = function (source, instructions) {
 	var script = document . createElement ('script');
 	script . src = source;

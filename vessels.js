@@ -17,7 +17,7 @@ var Harpoon = function (cable, name, country) {
 Harpoon . prototype . image = 'Harpoon';
 Harpoon . prototype . info = 'https://en.wikipedia.org/wiki/Harpoon_(missile)';
 
-var Virginia = function (country) {
+var Virginia = function (country, name) {
 	if (country === undefined) country = 'USA';
 	Vessel . call (this, country);
 	this . inventory = {
@@ -25,7 +25,8 @@ var Virginia = function (country) {
 		Harpoon: {constructor: Harpoon, count: 12, depth: 150}
 	}
 	this . BuildTubes ({'Mark 48 Long Range': 'Mark 48', 'Mark 48 Fast': 'Mark 48', Harpoon: 'Harpoon'}, 2);
-	this . name = Virginia . prototype . names . splice (Math . floor (Math . random () * Virginia . prototype . names . length), 1) [0];
+	if (name === undefined) this . name = Virginia . prototype . names . splice (Math . floor (Math . random () * Virginia . prototype . names . length), 1) [0];
+	else {var p = Virginia . prototype . names . indexOf (name); this . name = Virginia . prototype . names . splice (p, 1) [0];}
 	this . class = 'Virginia SSN';
 };inherit (Virginia, Vessel);
 Virginia . prototype . image = 'Virginia';

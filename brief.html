@@ -42,23 +42,37 @@
 </head>
 
 <body bgcolor="#0000aa" style="font-family: arial; color: gold; text-shadow: 1px 1px red; background-size: cover;">
+<script src="background_ctrl.js"></script>
 <script src="settings.js"></script>
+<script src="vessel.js"></script>
+<script src="vessels.js"></script>
 
-<h1>MISSION:</h1>
-<div id="mission"></div>
+<div><img id="flag" height="100px"/></div>
+<h1>Background:</h1>
+<div id="MissionBackground"></div>
+
+<h1>Mission:</h1>
+<div id="MissionObjective"></div>
+<br/>
+<div id="commander"></div>
 
 <script>
 
 var source = parameters . scenario;
-console . log (side, source);
-console . log (side);
 
-LoadJavaScript (`scenarios/${side}/${source}.js`, function () {console . log ('I am here.'); document . getElementById ('mission') . innerHTML = MissionBriefText;});
-//document . getElementById ('mission') . innerHTML = 'sputnik';
+LoadJavaScript (`scenarios/${side}/${source}.js`, function () {document . getElementById ('MissionBackground') . innerHTML = MissionBackground; document . getElementById ('MissionObjective') . innerHTML = MissionObjective;
+var captain = commanders [side] . commander;
+var rank = commanders [side] . commanders [captain] . rank;
+var virginia = new MissionConstructor (side);
+localStorage . setItem ('ShipsName', virginia . name);
+
+document . getElementById ('flag') . src = `flags/${side}.png`;
+document . getElementById ('commander') . innerHTML = `<font color="red">${rank} ${captain}</font> will be commanding ${virginia . class} class <font color="red">${virginia . name}</font> ${virginia . type}.`;
+});
 
 </script>
 
-<a href="game.html">Proceed</a>
+<h2><a href="game.html">Proceed</a></h2>
 
 
 </body>
